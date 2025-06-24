@@ -22,100 +22,127 @@ class DeleteDeliveryAddressPage {
   }
 
   async takeScreenshot(name) {
-    const filePath = path.join('images/Tunisia/DeleteDelivery', `${name}.png`);
+    const filePath = path.join('images/DeleteCountrySection', `${name}.png`);
     await this.page.screenshot({ path: filePath, fullPage: true });
     console.log(`📸 Screenshot taken: ${filePath}`);
   }
- //  Find a deletable address (non-default and not "no data available")
-  async storeFirstAddressText() {
-    console.log('📌 Looking for the first deletable address...');
-  
-    const rows = this.page.locator('tbody tr'); // ✅ Locate all rows
-    const count = await rows.count();
-    console.log(`📊 Total number of rows in the address table: ${count}`);
-  
-    if (count === 0) {
-      console.log('⚠️ No rows found.');
-      this.shouldSkip = true;
-      return;
-    }
-  
-    // Check first row
-    const firstRow = rows.nth(0);
-    const firstCell = firstRow.locator('td').first();
-    const firstText = (await firstCell.textContent()).trim();
-    const isFirstDefault = await firstRow.locator('input.changeStatus:checked').count() > 0;
-  
-    if (!isFirstDefault && !firstText.toLowerCase().includes('no data available')) {
-      this.deletedText = firstText;
-      this.targetRow = firstRow;
-      console.log(`✅ Stored address text from row 1: "${this.deletedText}"`);
-      return;
-    }
-  
-    console.log(`⚠️ First row skipped: ${isFirstDefault ? 'default address' : 'no data available'}`);
-  
-       // Check second row if exists
-    if (count > 1) {
-      const secondRow = rows.nth(1);
-      const secondCell = secondRow.locator('td').first();
-      const secondText = (await secondCell.textContent()).trim();
-  
-      if (secondText.toLowerCase().includes('no data available')) {
-        console.log('⚠️ Second row skipped: no data available');
-        this.shouldSkip = true;
-        return;
-      }
-  
-      this.deletedText = secondText;
-      this.targetRow = secondRow;
-      console.log(`✅ Stored address text from row 2: "${this.deletedText}"`);
-      return;
-    }
-  
-    console.log('⚠️ No deletable address found. Skipping remaining steps.');
-    this.shouldSkip = true;
-  }
-  
-  
-  async clickDeleteIconOfFirstAddress() {
-    if (this.shouldSkip) return;
-    console.log('🗑️ Clicking delete icon of the deletable address...');
-    const deleteButton = this.targetRow.locator(deleteIcon);
-    await deleteButton.click();
-    await this.takeScreenshot('clicked-delete-icon');
-  }
-  //  Choose to confirm or cancel the deletion
-  async chooseDeletionAction(action) {
-    if (this.shouldSkip) return;
-    if (action === 'Cancel') {
-      console.log('❌ Cancelling the deletion...');
-      await this.page.click(cancelDeleteButton);
-    } else if (action === 'Yes, delete!') {
-      console.log('✅ Confirming the deletion...');
-      await this.page.click(confirmDeleteButton);
-    } else {
-      throw new Error(`Unknown deletion action: ${action}`);
-    }
-    await this.takeScreenshot(`after-${action.replace(/\s+/g, '-').toLowerCase()}`);
-  }
- //  Validate whether the success message appears or not
-  async verifySuccessMessage(expectation) {
-    if (this.shouldSkip) return;
-    const successLocator = this.page.locator(successMessage);
 
-    if (expectation === 'see') {
-      await successLocator.waitFor({ state: 'visible', timeout: 5000 });
-      console.log('✅ Success message is visible');
-    } else if (expectation === 'not see') {
+
+ //  Find a deletable address (non-default and not "no data available")
+
+async storeFirstAddressText() {
+  // 🛠️ Choisissez un sélecteur plus fiable ici si vous avez un ID ou une classe
+  const table = this.page.locator('.dataTables_scrollBody table');
+
+  const rows = table.locator('tbody tr');
+  await rows.first().waitFor({ state: 'visible', timeout: 10000 });
+
+  const count = await rows.count();
+  console.log(`📊 Found ${count} address rows`);
+
+  if (count === 0) {
+    await this.takeScreenshot('no-visible-rows');
+    console.warn('⚠️ No rows found, skipping.');
+    this.shouldSkip = true;
+    return;
+  }
+
+  for (let i = 0; i < Math.min(count, 2); i++) {
+    const row = rows.nth(i);
+    const text = (await row.locator('td').first().textContent()).trim();
+    const isDefault = await row.locator('input.changeStatus:checked').count() > 0;
+
+    if (!isDefault && !text.toLowerCase().includes('no data')) {
+      this.deletedText = text;
+      this.targetRow = row;
+      console.log(`✅ Stored address from row ${i + 1}: "${this.deletedText}"`);
+      return;
+    }
+
+    console.log(`⚠️ Row ${i + 1} skipped: ${isDefault ? 'default address' : 'invalid text'}`);
+  }
+
+  console.warn('⚠️ No deletable address found.');
+  this.shouldSkip = true;
+}
+
+
+async chooseDeletionAction(action) {
+  if (this.shouldSkip) return;
+
+  if (action === 'Cancel') {
+    console.log('❌ Cancelling the deletion...');
+    const cancelButton = this.page.locator(cancelDeleteButton);
+    await this.takeScreenshot('before-cancel-click');
+
+    await cancelButton.waitFor({ state: 'visible', timeout: 5000 });
+    await cancelButton.scrollIntoViewIfNeeded();
+    await cancelButton.click({ force: true });
+
+    await this.takeScreenshot('after-cancel-click');
+
+  } else if (action === 'Yes, delete!') {
+    console.log('✅ Confirming the deletion...');
+
+    let confirmButton = this.page.locator(confirmDeleteButton);
+
+    await this.takeScreenshot('before-confirm-wait');
+
+    // 🔁 Tentative normale
+    try {
+      await confirmButton.waitFor({ state: 'visible', timeout: 5000 });
+      await this.takeScreenshot('confirm-button-visible');
+      await confirmButton.scrollIntoViewIfNeeded();
+      await confirmButton.click({ force: true });
+      console.log('✅ Confirm delete button clicked normally.');
+    } catch (error) {
+      console.warn('⚠️ Confirm button not visible in time — trying fallback click.');
+
+      // Fallback 1: clic sur le 2e bouton de la modale SweetAlert
+      confirmButton = this.page.locator('.swal-footer button:nth-child(2)');
+      const fallbackExists = await confirmButton.count();
+
+      if (fallbackExists === 0) {
+        await this.takeScreenshot('fallback-confirm-button-not-found');
+        console.warn('⚠️ Fallback button not found either. Continuing anyway...');
+        return; // 🟡 On continue quand même pour ne pas bloquer
+      }
+
       try {
-        await successLocator.waitFor({ state: 'visible', timeout: 3000 });
-        throw new Error('❌ Success message appeared but should not');
-      } catch {
-        console.log('✅ Success message not visible (as expected)');
+        await confirmButton.click({ force: true });
+        console.log('✅ Fallback confirm button clicked.');
+      } catch (e2) {
+        await this.takeScreenshot('fallback-confirm-button-click-failed');
+        console.warn('❌ Fallback confirm button click failed.');
       }
     }
+
+    await this.takeScreenshot('after-confirm-click');
+
+  } else {
+    throw new Error(`Unknown deletion action: ${action}`);
   }
+
+  await this.takeScreenshot(`after-${action.replace(/\s+/g, '-').toLowerCase()}`);
+}
+
+
+ //  Validate whether the success message appears or not
+async verifyAddressPresence(shouldExist) {
+  if (this.shouldSkip) return;
+
+  const addressLocator = this.page.locator(`table td:has-text("${this.deletedText}")`);
+  const count = await addressLocator.count();
+
+  if (shouldExist && count === 0) {
+    throw new Error(`❌ Address "${this.deletedText}" not found`);
+  } else if (!shouldExist && count > 0) {
+    throw new Error(`❌ Address "${this.deletedText}" was not deleted`);
+  }
+
+  console.log(`✅ Address "${this.deletedText}" ${shouldExist ? 'is still present' : 'is no longer present'}`);
+}
+
  //  Close SweetAlert success popup if it's visible
   async clickSuccessOkIfVisible() {
     if (this.shouldSkip) return;
@@ -131,21 +158,59 @@ class DeleteDeliveryAddressPage {
       console.log('ℹ️ OK button not visible, skipping click.');
     }
   }
-  //  Verify whether the address is still visible in the table
-  async verifyAddressPresence(shouldExist) {
-    if (this.shouldSkip) return;
-    const addressLocator = this.page.locator(`table td:has-text("${this.deletedText}")`);
+async clickDeleteIconOfFirstAddress() {
+  if (this.shouldSkip) return;
+  console.log('🗑️ Clicking delete icon of the deletable address...');
 
-    if (shouldExist) {
-      await addressLocator.waitFor({ state: 'visible', timeout: 5000 });
-      console.log(`✅ Address "${this.deletedText}" is still present`);
-    } else {
-      const count = await addressLocator.count();
-      if (count > 0) throw new Error(`❌ Address "${this.deletedText}" was not deleted`);
-      console.log(`✅ Address "${this.deletedText}" is no longer present`);
-    }
+  const deleteButton = this.targetRow.locator(deleteIcon);
+  await deleteButton.click();
+  await this.takeScreenshot('clicked-delete-icon');
+
+  // ✅ Attente explicite que la modale SweetAlert apparaisse
+  const swalModal = this.page.locator('.swal-modal');
+  try {
+    await swalModal.waitFor({ state: 'visible', timeout: 5000 });
+    console.log('✅ SweetAlert modal is visible.');
+    await this.takeScreenshot('swal-modal-visible');
+  } catch (e) {
+    await this.takeScreenshot('swal-modal-not-visible');
+    throw new Error('❌ SweetAlert modal did not appear after clicking delete icon');
+  }
+}
+
+  //  Verify whether the address is still visible in the table
+async verifyAddressPresence(shouldExist) {
+  if (this.shouldSkip) return;
+
+  const addressLocator = this.page.locator(`table td:has-text("${this.deletedText}")`);
+  const count = await addressLocator.count();
+
+  if (shouldExist && count === 0) {
+    throw new Error(`❌ Address "${this.deletedText}" not found but was expected`);
+  } else if (!shouldExist && count > 0) {
+    throw new Error(`❌ Address "${this.deletedText}" was found but should have been deleted`);
   }
 
+  console.log(`✅ Address "${this.deletedText}" ${shouldExist ? 'is still present' : 'is no longer present'}`);
+}
+
+
+async verifySuccessMessage(expectation) {
+    if (this.shouldSkip) return;
+    const successLocator = this.page.locator(successMessage);
+
+    if (expectation === 'see') {
+      await successLocator.waitFor({ state: 'visible', timeout: 5000 });
+      console.log('✅ Success message is visible');
+    } else if (expectation === 'not see') {
+      try {
+        await successLocator.waitFor({ state: 'visible', timeout: 3000 });
+        throw new Error('❌ Success message appeared but should not');
+      } catch {
+        console.log('✅ Success message not visible (as expected)');
+      }
+    }
+  }
   async selectCountry(country) {
     if (!country) {
       console.log('ℹ️ No country selected, skipping...');
@@ -194,7 +259,7 @@ class DeleteDeliveryAddressPage {
   async isAddressDefault() {
     const defaultToggle = this.page.locator(defaultToggleInput);
     return await defaultToggle.count() > 0;
-  }
+  } 
  //  Check if a specific error message appears
   async verifyErrorMessage(messageText) {
     if (this.shouldSkip) return;

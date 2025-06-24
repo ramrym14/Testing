@@ -1,6 +1,6 @@
 module.exports = {
     deleteIcon: 'a.deleteAddress', // icône de suppression (dans chaque ligne)
-    confirmDeleteButton: 'button.swal-button--delete', // bouton "Yes, delete!" dans SweetAlert
+    confirmDeleteButton: 'button.swal-button--delete:has-text("Yes, delete!")', // bouton "Yes, delete!" dans SweetAlert
     cancelDeleteButton: 'button.swal-button--cancel',  // bouton "Cancel" dans SweetAlert
     successMessage: 'text="Operation performed successfully"', // message de succès
     successOkButton: 'div.swal-footer button', // bouton "OK" après suppression réussie

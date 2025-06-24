@@ -1,70 +1,97 @@
 const { chromium } = require('@playwright/test');
 const path = require('path');
-const { LoginPage } = require('../pages/Tunisia/LoginPage');
+
 require('dotenv').config();
 
-let browser, context, page;
+let browser = null;
+let context = null;
+let page = null;
 
-async function startNewSession(doLogin = true) {
-  //  Si une session existe déjà, la réutiliser
-  if (page) {
-    console.log('♻️ Réutilisation de la session existante');
+
+async function startNewSession() {
+  if (browser && context && page) {
+    console.log('⚠️ Session already started. Returning existing session.');
     return page;
   }
-//  Launch Chromium browser in headless mode using real Chrome channel
-  browser = await chromium.launch({
-    channel: 'chrome',
-    headless: true,
-    args: ['--headless=new']
-  });
 
-  //  Create a new browser context with realistic settings
-  context = await browser.newContext({
-    userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/123.0.0.0 Safari/537.36',
-    viewport: { width: 1280, height: 800 },
-    extraHTTPHeaders: {
-      'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-      'accept-language': 'en-US,en;q=0.9',
-      'referer': process.env.BASE_URL,
-      'origin': process.env.BASE_URL,
-      'sec-fetch-site': 'same-origin',
-      'sec-fetch-mode': 'navigate',
-      'sec-fetch-user': '?1',
-      'sec-fetch-dest': 'document',
-      'upgrade-insecure-requests': '1'
+  try {
+    browser = await chromium.launch({
+      channel: 'chrome',
+      headless: false,        // Visible browser for debugging
+      slowMo: 150,            // Delay for step visibility
+    });
+
+    context = await browser.newContext({
+      userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/123.0.0.0 Safari/537.36',
+      viewport: { width: 1250, height: 700 },
+
+      extraHTTPHeaders: {
+        'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+        'accept-language': 'en-US,en;q=0.9',
+        'referer': process.env.BASE_URL,
+        'origin': process.env.BASE_URL,
+      }
+    });
+
+    page = await context.newPage();
+
+    // ✅ Navigate to base URL and verify page is alive
+    await page.goto(process.env.BASE_URL, { waitUntil: 'load', timeout: 10000 });
+    console.log('🧼 New browser session started and navigated to login page.');
+
+    // 🧪 Optional: check if DOM is usable
+    const bodyExists = await page.locator('body').isVisible({ timeout: 3000 }).catch(() => false);
+    if (!bodyExists) {
+      console.warn('⚠️ Page body not visible — possible loading failure.');
     }
-  });
 
-// 🗂️ Open a new tab (page) and go to the BASE_URL defined in .env
-  page = await context.newPage();
-  await page.goto(process.env.BASE_URL);
-  console.log('🧼 Session started using Google Chrome');
+    return page;
 
-  // 🔐 Perform login if required
-  if (doLogin) {
-    const loginPage = new LoginPage(page);
-    await loginPage.login("TN08343357", "megadios");
-    console.log('✅ Auto-login performed');
+  } catch (error) {
+    console.error('❌ Failed to start browser session:', error.message);
+
+    // Ensure cleanup if failure occurs
+    if (page) await page.close().catch(() => {});
+    if (context) await context.close().catch(() => {});
+    if (browser) await browser.close().catch(() => {});
+
+    browser = null;
+    context = null;
+    page = null;
+
+    throw new Error('Browser session could not be initialized.');
   }
-
-  return page;
 }
 
 // Cleanly close all Playwright resources.
-async function closeSession() {
-  if (page) await page.close();  // Close the tab
-  if (context) await context.close();
-  if (browser) await browser.close();
+// Pass `shouldClose = true` to close browser (false = keep open for debugging)
+async function closeSession(shouldClose = true) {
+  if (!shouldClose) {
+    console.log('⚠️ Skipping browser close due to failure (for debugging or AI analysis)');
+    return;
+  }
 
-   // Reset references to null to allow future reinitialization
-  page = null;
-  context = null;
-  browser = null;
+  try {
+    // Optional short delay to ensure logs or screenshots flush
+    await new Promise(res => setTimeout(res, 500));
 
-  console.log('🔴 Session closed');
+    if (page && !page.isClosed?.()) await page.close();
+    if (context) await context.close();
+    if (browser) await browser.close();
+
+    console.log('🔴 Session closed');
+  } catch (err) {
+    console.error('❌ Error while closing session:', err.message);
+  } finally {
+    // Always reset references to avoid stale sessions
+    page = null;
+    context = null;
+    browser = null;
+  }
 }
-// Return the currently active Playwright page.
-// Throws an error if no session is started.
+
+
+
 function getPage() {
   if (!page) throw new Error('Page not initialized — call startNewSession first.');
   return page;

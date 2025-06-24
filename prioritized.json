@@ -1,0 +1,19 @@
+ 
+
+ [
+  {
+    "name": "Verify ADD button behavior and address form outcome by selected country",
+    "priority": "HIGH",
+    "reason": "The '@add' and '@high' tags indicate that this scenario involves adding a new item, which is crucial for system functionality."
+  },
+  {
+    "name": "Modify an address using various data inputs and verify the outcome",
+    "priority": "MEDIUM",
+    "reason": "The '@modify' tag implies that this scenario requires updating existing data. Although not as critical as adding new items, it is still important for maintaining system functionality."
+  },
+  {
+    "name": "Try to delete delivery addresses from different cases",
+    "priority": "LOW",
+    "reason": "The '@delete' and '@low' tags suggest that this scenario deals with removing data. While deleting data is a necessary function, it is less critical than adding or modifying data in the context of system functionality."
+  }
+]

@@ -1,64 +1,106 @@
-const { Before, setDefaultTimeout } = require('@cucumber/cucumber');
-const { startNewSession } = require('./testEnvironment');
-const { LoginPage } = require('../pages/Tunisia/LoginPage');
-const { addButton } = require('../ressources/Tunisia/DeliveryAddButtonSelectors');
+const fs   = require('fs');
+const path = require('path');
+const {
+  Before,
+  After,
+  AfterStep,
+  setDefaultTimeout,
+  Status
+} = require('@cucumber/cucumber');
+const { startNewSession, closeSession } = require('../utils/testEnvironment');
+const { openEyes, closeEyes, abortEyes } = require('../utils/eyesHelper');
+const { analyzeFailureWithAI, suggestSelectorFix } = require('../utils/aiFailureHandler');
 
 setDefaultTimeout(60 * 1000);
 
-// 🚀 Navigation vers Delivery Address sans screenshot
-async function goToDeliverySectionCustom(page) {
-  console.log('🧭 Navigating to Delivery Address section...');
+let sessionCount = 0;
 
-  const swalOverlay = page.locator('.swal-overlay');
-  if (await swalOverlay.isVisible()) {
-    console.log('⚠️ Modale SweetAlert détectée, tentative de fermeture...');
-    await page.keyboard.press('Escape');
-    try {
-      await swalOverlay.waitFor({ state: 'detached', timeout: 5000 });
-      console.log('✅ Modale fermée');
-    } catch {
-      console.warn('❌ Modale toujours visible, suppression forcée');
-      await page.evaluate(() => {
-        const modal = document.querySelector('.swal-overlay');
-        if (modal) modal.remove();
-      });
-    }
-    await page.waitForTimeout(500);
-  }
-
-  await page.click('a.profile-button');
-  await page.click('text=My account');
-  await page.click('text=DELIVERY ADDRESS');
-
-  console.log('⏳ Waiting for ADD button...');
-  try {
-    await page.waitForSelector(addButton, { state: 'visible', timeout: 5000 });
-    console.log('✅ ADD button is visible');
-  } catch (e) {
-    console.warn('⚠️ ADD button not immediately visible, continuing...');
-  }
-}
-
-// 🎯 Hook principal
+// ✅ Before each scenario: start a new browser session (with auto login)
 Before(async function (scenario) {
-  //  Extract tags from the scenario 
-  const tags = scenario.pickle.tags.map(t => t.name);
-  const isLogin = tags.includes('@login');
+  sessionCount++;
+  console.log(`\n📂 Starting session #${sessionCount} for scenario: ${scenario.pickle.name}`);
 
-   // Start  Playwright session without logging in yet
-  this.page = await startNewSession(false);
+  try {
+    // 💡 Safe check for Scenario Outline or steps with data tables
+    const firstStep = scenario?.pickle?.steps?.[0];
+    const hasRows = firstStep?.argument && Array.isArray(firstStep.argument.rows);
 
-  if (isLogin) {
-    console.log('⏭️ Skipping login for @login scenario');
-    return;
+    if (hasRows) {
+      console.log('✅ This scenario uses a data table:', firstStep.argument.rows);
+      // Do something with rows if needed
+    }
+
+    this.page = await startNewSession(true);
+  } catch (error) {
+    console.error('❌ Error during session start:', error.message);
+    this.page = undefined;
+  }
+});
+
+
+AfterStep(async function ({ result, pickle }) {
+  if (result.status === Status.FAILED && this.page && !this.page.isClosed?.()) {
+    // 1️⃣ Take screenshot
+    const safeName       = pickle.name.replace(/[^a-zA-Z0-9]/g, '_') + `_${Date.now()}`;
+    const screenshotPath = path.join('images', 'failures', `${safeName}.png`);
+    fs.mkdirSync(path.dirname(screenshotPath), { recursive: true });
+    await this.page.screenshot({ path: screenshotPath, fullPage: true });
+    console.log(`🖼️ [AfterStep] Screenshot saved to: ${screenshotPath}`);
+
+    // 2️⃣ Grab any visible UX error text
+    let uxText = '';
+    for (const sel of [
+      '.card-alert',
+      '.alert-danger',
+      '.swal-text',
+      '.toast-message',
+      '.error-message',
+      '.notification-error'
+    ]) {
+      try {
+        const loc = this.page.locator(sel);
+        if (await loc.isVisible({ timeout: 300 })) {
+          uxText = (await loc.innerText()).trim();
+          break;
+        }
+      } catch {}
+    }
+
+    // 3️⃣ Run AI classification with screenshot + logs + UX
+    const errorLog = result.message || 'No error message provided';
+    const failureDetails = await analyzeFailureWithAI(errorLog, {
+      username: this.username || 'Unknown',
+      testName: pickle.name,
+      expectedBehavior: 'Expected successful step execution',
+      uxText,
+      screenshotPath
+    });
+
+    console.log('🧠 Failure Classified As:', failureDetails.type);
+    console.log('📖 Explanation:', failureDetails.explanation);
+
+    // 4️⃣ Optional: if it’s a selector error, ask for a fix
+    if (failureDetails.type === 'SelectorError') {
+      const html = await this.page.content().catch(() => 'DOM unavailable');
+      const fix  = await suggestSelectorFix(failureDetails.selector, html);
+      console.log('🔧 Suggested Fix:', fix);
+    }
+  }
+});
+
+// ——————————————————————————————————————
+// After: just clean up (Applitools + browser)
+// ——————————————————————————————————————
+After(async function ({ result }) {
+  const isFailed = result.status === Status.FAILED;
+
+  // Applitools cleanup
+  if (this.eyes) {
+    if (isFailed) await abortEyes(this.eyes);
+    else          await closeEyes(this.eyes);
   }
 
-  const loginPage = new LoginPage(this.page);
-  await loginPage.navigate();
-  await loginPage.login("TN08343357", "megadios");
-  await loginPage.waitForDashboard();
-  console.log('✅ Login completed');
-
-  // Navigate to Delivery Address section after login
-  await goToDeliverySectionCustom(this.page);
+  // Finally close the browser
+  await closeSession(true);
+  console.log(`✅ Session #${sessionCount} closed after ${isFailed ? 'failure analysis' : 'success'}`);
 });

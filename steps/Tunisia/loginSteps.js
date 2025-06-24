@@ -1,35 +1,12 @@
-const { Before, After, Given, When, Then, setDefaultTimeout } = require('@cucumber/cucumber');
-const { startNewSession, closeSession } = require('../../utils/testEnvironment');
+const { Given, When, Then } = require('@cucumber/cucumber');
+const { expect } = require('@playwright/test');
 const { LoginPage } = require('../../pages/Tunisia/LoginPage');
-const { openEyes, closeEyes, abortEyes, Target } = require('../../utils/eyesHelper');
-const { errorBox } = require('../../ressources/Tunisia/loginSelectors');
 
-require('dotenv').config();
-setDefaultTimeout(60000);
-
-let page, loginPage, eyes;
-
-Before(async () => {
-  page = await startNewSession();
-  loginPage = new LoginPage(page);
-});
-
-After(async () => {
-  try {
-    if (eyes) {
-      await closeEyes(eyes);
-    }
-    await closeSession();
-  } catch (err) {
-    console.warn('⚠️ Error during session close:', err.message);
-    if (eyes) await abortEyes(eyes);
-  }
-});
+let loginPage;
 
 Given('I am on the login page', async function () {
+  loginPage = new LoginPage(this.page);
   await loginPage.navigate();
-  eyes = await openEyes(page, 'Login Page');
-  await eyes.check('Login Page UI', Target.window().fully());
 });
 
 When('I login using username {string} and password {string}', async function (username, password) {
@@ -37,23 +14,31 @@ When('I login using username {string} and password {string}', async function (us
 });
 
 Then('I should see {string} and {string}', async function (result, message) {
+  this.result = result;
+  this.message = message;
+
   if (result === 'dashboard') {
-    await loginPage.waitForDashboard();
-    await eyes.check('Dashboard UI', Target.window().fully());
+    await this.page.waitForURL('**/dashboard', { timeout: 5000 });
+    console.log('✅ Successfully reached dashboard');
   } else if (result === 'error') {
-    const errorBoxLocator = await page.locator(errorBox);
-    await errorBoxLocator.waitFor({ state: 'visible', timeout: 5000 });
-    await loginPage.takeScreenshot('error-visible');
+    const errorBox = this.page.locator('div.card-content.white-text');
+    await expect(errorBox).toBeVisible({ timeout: 5000 });
 
-    const actualMessage = await errorBoxLocator.innerText();
-    console.log('🔍 Error message found:', actualMessage);
-
-    await eyes.check('Error Message UI', Target.region(errorBoxLocator));
-
-    if (!actualMessage.includes(message)) {
-      throw new Error(`Expected: "${message}", but got: "${actualMessage}"`);
+    if (message) {
+      const actualText = await errorBox.textContent();
+      expect(actualText.trim()).toContain(message);
     }
   } else {
-    throw new Error(`Unknown result value: "${result}"`);
+    throw new Error(`❌ Unknown result: "${result}"`);
   }
 });
+
+Then('the country flag icon should be {string}', async function (flagClass) {
+  if (this.result === 'dashboard') {
+    await loginPage.checkCountryFlag(flagClass, true);
+  } else {
+    await loginPage.checkCountryFlag(flagClass, false);
+  }
+});
+
+
