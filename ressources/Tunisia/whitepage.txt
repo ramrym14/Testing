@@ -1,5 +1,0 @@
-addButton: 'a.orderAddress:has-text("ADD")',
-
-  countryDropdown: '.select-2-custom-int .select2-container',
-  countryDropdownList: 'ul#select2-order_country-results',
-  countryOption: (country) => `ul#select2-order_country-results >> text="${country.trim()}"`,

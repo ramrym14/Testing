@@ -1,8 +1,0 @@
-{
-  "type": "Timeout",
-  "explanation": [
-    "The test execution timed out while waiting for the expected element '.swal-modal'.",
-    "The frontend UX does not display an error related to a timeout, but the error log indicates a wait-for-element operation timed out.",
-    "Consider adjusting the wait time for the locator.waitFor function or ensuring that the expected element is available and visible before the test executes."
-  ]
-}

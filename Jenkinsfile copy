@@ -1,0 +1,97 @@
+pipeline {
+  agent any
+
+ environment {
+  IMAGE_NAME = "test1-playwright"
+  CONTAINER_NAME = "playwrights"
+}
+
+
+  stages {
+
+    stage('Checkout') {
+      steps {
+        checkout scm
+      }
+    }
+
+    stage('Check Docker and Docker Compose') {
+      steps {
+        script {
+          sh 'docker --version'
+          sh 'docker-compose --version'
+          sh 'docker-compose up -d --build'
+        }
+      }
+    }
+
+    stage('Run Playwright Tests Inside Container') {
+      steps {
+        script {
+          sh "docker exec ${CONTAINER_NAME} npx cucumber-js"
+        }
+      }
+    }
+
+    stage('Generate Allure Report') {
+      steps {
+        script {
+          sh "docker exec ${CONTAINER_NAME} /bin/sh -c 'allure generate allure-results --clean -o allure-report'"
+        }
+      }
+    }
+
+    stage('Archive and Deploy Report') {
+      steps {
+        script {
+          // Create tar archive
+          sh 'tar -czf allure-report.tar.gz allure-report'
+
+          // Send to remote server via SSH (optional, adapt credentials)
+          sshagent(credentials: ['YOUR-CREDENTIAL-ID']) {
+            sh 'scp allure-report.tar.gz user@your-server:/var/www/html/reports/'
+          }
+
+          // Clean local archive
+          sh 'rm allure-report.tar.gz'
+        }
+      }
+    }
+
+    stage('Send Email Notification') {
+      steps {
+        script {
+          emailext(
+            subject: 'BDD Test Results',
+            body: 'The Playwright BDD test run is complete. Report is available.',
+            to: 'your-team@example.com'
+          )
+        }
+      }
+    }
+
+    stage('Send Discord Notification') {
+      steps {
+        script {
+          def payload = [
+            username: 'Jenkins Bot',
+            content: '✅ Playwright BDD Test completed. View Allure Report: https://yourserver.com/reports/'
+          ]
+          sh """
+            curl -H "Content-Type: application/json" \
+                 -X POST \
+                 -d '${groovy.json.JsonOutput.toJson(payload)}' \
+                 https://discord.com/api/webhooks/YOUR_WEBHOOK_ID
+          """
+        }
+      }
+    }
+  }
+
+  post {
+    always {
+      sh 'docker-compose down --volumes --remove-orphans'
+      deleteDir()
+    }
+  }
+}
