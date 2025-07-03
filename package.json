@@ -2,9 +2,10 @@
   "name": "test1",
   "version": "1.0.0",
   "description": "Test simple avec Playwright dans Docker",
-  "scripts": {
-    "test": "playwright test"
-  },
+ "scripts": {
+  "test": "npx cucumber-js",
+  "debug": "sh"
+},
   "devDependencies": {
     "@applitools/eyes-playwright": "^1.37.3",
     "@cucumber/cucumber": "^11.2.0",

@@ -2,15 +2,24 @@ FROM mcr.microsoft.com/playwright:next-focal
 
 WORKDIR /app
 
-# Copy package files and install Node.js dependencies
+# Copie les dépendances et installe-les
 COPY package*.json ./
 RUN npm install
+
+# Forcer installation de Cucumber
+RUN npm install @cucumber/cucumber --save-dev
+
+
+# Met les binaires locaux dans le PATH  (cucumber-js, playwright, …)
+ENV PATH="/app/node_modules/.bin:${PATH}"
+
+# Mise à jour des certificats + Chrome
 RUN apt-get update && apt-get install -y ca-certificates && update-ca-certificates
-# Install Google Chrome inside the container
 RUN npx playwright install --with-deps chrome
 
-# Copy the rest of your project files
+# Copie du reste du projet
 COPY . .
 
-# Entrypoint for Cucumber tests / run  auto tests using cucumber to run BDD test 
-ENTRYPOINT ["npx", "cucumber-js"]
+
+# 5. Commande par défaut (CMD remplaçable)
+CMD ["node", "node_modules/@cucumber/cucumber/bin/cucumber-js"]
