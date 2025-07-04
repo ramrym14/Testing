@@ -15,6 +15,7 @@ services:
       - app-network
     environment:
       - JAVA_OPTS=-Djenkins.install.runSetupWizard=false  # Disable setup wizard
+    user: root
 
   playwright:
     build: .
