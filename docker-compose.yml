@@ -10,7 +10,7 @@ services:
     volumes:
       - jenkins_home:/var/jenkins_home  # Persistent Jenkins data
       - /var/run/docker.sock:/var/run/docker.sock  # Allow Jenkins to control Docker
-      - C:/Users/YOGA X380/.ssh:/var/jenkins_home/.ssh:ro  # Mount your host SSH keys into Jenkins
+      - "/c/Users/YOGA X380/.ssh:/var/jenkins_home/.ssh:ro"  # Mount your host SSH keys into Jenkins
     networks:
       - app-network
     environment:
