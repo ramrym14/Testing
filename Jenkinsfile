@@ -17,14 +17,16 @@ pipeline {
       }
     }
 
-    stage('Build and Run Containers') {
-      steps {
-        script {
-          sh 'docker-compose down --volumes --remove-orphans'
-          sh 'docker-compose up -d --build'
-        }
-      }
+stage('Check Docker and Docker Compose') {
+  steps {
+    script {
+      sh 'docker --version'
+      sh 'docker-compose up -d --build'
+      echo "Docker and Docker Compose OK"
     }
+  }
+}
+
 
     stage('Run Playwright Tests Inside Container') {
       steps {
