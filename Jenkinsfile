@@ -17,26 +17,25 @@ pipeline {
       }
     }
 
-stage('Check Docker and Docker Compose') {
+ stage('Check Docker and Docker Compose') {
       steps {
         script {
           sh 'docker --version'
-          sh '''
-          if [ "$(docker ps -q -f name=${CONTAINER_NAME})" ]; then
-              echo "Container '${CONTAINER_NAME}' is already running. Nothing to do."
-          elif [ "$(docker ps -aq -f name=${CONTAINER_NAME})" ]; then
-              echo "Container '${CONTAINER_NAME}' exists but stopped. Starting it..."
+          sh """
+            if [ "\$(docker ps -q -f name=${CONTAINER_NAME})" ]; then
+              echo "✅ Container '${CONTAINER_NAME}' is already running. Nothing to do."
+            elif [ "\$(docker ps -aq -f name=${CONTAINER_NAME})" ]; then
+              echo "♻️ Container '${CONTAINER_NAME}' exists but stopped. Starting it..."
               docker start ${CONTAINER_NAME}
-          else
-              echo "Container '${CONTAINER_NAME}' does not exist. Creating and starting it..."
-              docker-compose up -d
-          fi
-          '''
-          echo "Docker and Docker Compose OK"
+            else
+              echo "🚀 Container '${CONTAINER_NAME}' does not exist. Creating and starting it..."
+              docker-compose up -d playwright
+            fi
+          """
+          echo "🛠️ Docker and Docker Compose OK"
         }
       }
     }
-
 
     stage('Run Playwright Tests Inside Container') {
       steps {
