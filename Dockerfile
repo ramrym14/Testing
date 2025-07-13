@@ -16,6 +16,7 @@ ENV PATH="/app/node_modules/.bin:${PATH}"
 # Mise à jour des certificats + Chrome
 RUN apt-get update && apt-get install -y ca-certificates && update-ca-certificates
 RUN npx playwright install --with-deps chrome
+RUN  apt-get install -y xvfb
 
 # Copie du reste du projet
 COPY . .
