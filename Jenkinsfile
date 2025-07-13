@@ -37,13 +37,15 @@ pipeline {
       }
     }
 
-   stage('Run Playwright Tests Inside Container') {
+stage('Run Playwright Tests Inside Container') {
   steps {
     script {
-      sh "docker exec ${CONTAINER_NAME} xvfb-run npx cucumber-js"
+      sh "docker exec ${CONTAINER_NAME} xvfb-run npx cucumber-js 'features/Countries/**/*.feature'"
     }
   }
 }
+
+
 
     stage('Archive Cucumber HTML Report') {
       steps {
