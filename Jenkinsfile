@@ -111,7 +111,7 @@ stage('Check Host Memory After Tests') {
           emailext(
             subject: 'BDD Test Results',
             body: '✅ Playwright BDD tests completed. View the Cucumber HTML report in Jenkins.',
-            to: 'Rim.Aissa@esprit.tn'
+            to: 'rymaaissa14@gmail.com'
           )
         }
       }
