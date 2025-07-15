@@ -37,14 +37,32 @@ pipeline {
       }
     }
 
+stage('Check Host Memory') {
+  steps {
+    sh 'free -h || vmstat || top -b -n1 | head -20'
+  }
+}
 stage('Run Playwright Tests Inside Container') {
   steps {
     script {
-      sh "docker exec ${CONTAINER_NAME} xvfb-run npx cucumber-js 'features/Countries/**/*.feature'"
+      echo "📈 Current Docker container stats before running tests:"
+      sh "docker stats --no-stream ${CONTAINER_NAME}"
+
+      sh "docker exec ${CONTAINER_NAME} free -h" // inside container
+
+      sh "docker exec ${CONTAINER_NAME} xvfb-run npx cucumber-js 'features/Countries/**/*.feature' || true"
+
+      echo "📈 Docker container stats after running tests:"
+      sh "docker stats --no-stream ${CONTAINER_NAME}"
     }
   }
 }
 
+stage('Check Host Memory') {
+  steps {
+    sh 'free -h || vmstat || top -b -n1 | head -20'
+  }
+}
 
 
     stage('Archive Cucumber HTML Report') {
