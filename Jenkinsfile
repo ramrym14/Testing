@@ -86,7 +86,7 @@ stage('Check Host Memory After Tests') {
 
     stage('Deploy Report to GitHub Pages') {
       steps {
-        sshagent(['github_ssh_key']) {
+        sshagent(['ssh-key-for-github']) {
           script {
             sh '''
               rm -rf gh-pages-tmp
@@ -111,7 +111,7 @@ stage('Check Host Memory After Tests') {
           emailext(
             subject: 'BDD Test Results',
             body: '✅ Playwright BDD tests completed. View the Cucumber HTML report in Jenkins.',
-            to: 'your-team@example.com'
+            to: 'Rim.Aissa@esprit.tn'
           )
         }
       }
