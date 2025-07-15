@@ -37,11 +37,12 @@ pipeline {
       }
     }
 
-stage('Check Host Memory') {
+stage('Check Host Memory Before Tests') {
   steps {
     sh 'free -h || vmstat || top -b -n1 | head -20'
   }
 }
+
 stage('Run Playwright Tests Inside Container') {
   steps {
     script {
@@ -58,12 +59,11 @@ stage('Run Playwright Tests Inside Container') {
   }
 }
 
-stage('Check Host Memory') {
+stage('Check Host Memory After Tests') {
   steps {
     sh 'free -h || vmstat || top -b -n1 | head -20'
   }
 }
-
 
     stage('Archive Cucumber HTML Report') {
       steps {
