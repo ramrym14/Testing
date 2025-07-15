@@ -105,17 +105,21 @@ stage('Check Host Memory After Tests') {
       }
     }
 
-    stage('Send Email Notification') {
-      steps {
-        script {
-          emailext(
-            subject: 'BDD Test Results',
-            body: '✅ Playwright BDD tests completed. View the Cucumber HTML report in Jenkins.',
-            to: 'rymaaissa14@gmail.com'
-          )
-        }
-      }
+   stage('Send Email Notification') {
+  steps {
+    script {
+      emailext(
+        subject: 'BDD Test Results',
+        body: '✅ Playwright BDD tests completed. View the Cucumber HTML report in Jenkins.',
+        to: 'rymaaissa14@gmail.com',
+        from: 'rymaaissa14@gmail.com'
+      )
     }
+  }
+}
+
+
+
   }
 
   post {
