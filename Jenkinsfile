@@ -104,6 +104,9 @@ stage('Check Host Memory After Tests') {
         }
       }
     }
+
+
+
  // 🚀 New stages
     stage('Check Prometheus') {
       steps {
@@ -114,6 +117,8 @@ stage('Check Host Memory After Tests') {
       }
     }
 
+
+
   stage('Show Grafana URL') {
   steps {
     script {
@@ -123,14 +128,19 @@ stage('Check Host Memory After Tests') {
   }
 }
 
+
+
     stage('Check cAdvisor') {
       steps {
         script {
           echo "🔎 Checking cAdvisor..."
-          sh "curl -s http://cadvisor:8080/ || echo '⚠️ cAdvisor not reachable'"
+          sh "curl -s http://cadvisor:8081/ || echo '⚠️ cAdvisor not reachable'"
         }
       }
     }
+
+
+
    stage('Send Email Notification') {
   steps {
     script {
