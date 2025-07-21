@@ -104,7 +104,33 @@ stage('Check Host Memory After Tests') {
         }
       }
     }
+ // 🚀 New stages
+    stage('Check Prometheus') {
+      steps {
+        script {
+          echo "🔎 Checking Prometheus..."
+          sh "curl -s http://prometheus:9090/-/ready || echo '⚠️ Prometheus not reachable'"
+        }
+      }
+    }
 
+  stage('Show Grafana URL') {
+  steps {
+    script {
+      echo "🎨 Grafana is available at: http://localhost:3000"
+      echo "🔗 You can open it in your browser to explore dashboards."
+    }
+  }
+}
+
+    stage('Check cAdvisor') {
+      steps {
+        script {
+          echo "🔎 Checking cAdvisor..."
+          sh "curl -s http://cadvisor:8080/ || echo '⚠️ cAdvisor not reachable'"
+        }
+      }
+    }
    stage('Send Email Notification') {
   steps {
     script {
