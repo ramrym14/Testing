@@ -2,10 +2,10 @@
   "name": "test1",
   "version": "1.0.0",
   "description": "Test simple avec Playwright dans Docker",
- "scripts": {
-  "test": "npx cucumber-js",
-  "debug": "sh"
-},
+  "scripts": {
+    "test": "npx cucumber-js",
+    "debug": "sh"
+  },
   "devDependencies": {
     "@applitools/eyes-playwright": "^1.37.3",
     "@cucumber/cucumber": "^11.2.0",
@@ -23,7 +23,10 @@
   "dependencies": {
     "axios": "^1.9.0",
     "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "fs": "^0.0.1-security",
     "module-alias": "^2.2.3",
-    "openai": "^5.3.0"
+    "openai": "^5.3.0",
+    "prom-client": "^15.1.3"
   }
 }

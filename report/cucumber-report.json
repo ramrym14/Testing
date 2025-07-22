@@ -6,7 +6,7 @@
         "description": "",
         "id": "delivery-address-behavior-based-on-selected-country;verify-add-button-behavior-and-address-form-outcome-by-selected-country",
         "keyword": "Scenario Outline",
-        "line": 21,
+        "line": 22,
         "name": "Verify ADD button behavior and address form outcome by selected country",
         "steps": [
           {
@@ -14,7 +14,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 3171534000
+              "duration": 2474259500
             }
           },
           {
@@ -22,7 +22,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 1441164800
+              "duration": 1153787900
             }
           },
           {
@@ -30,7 +30,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 138720800
+              "duration": 136045500
             }
           },
           {
@@ -38,20 +38,20 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 136835399
+              "duration": 146704200
             }
           },
           {
             "arguments": [],
             "keyword": "Given ",
             "line": 5,
-            "name": "I am logged in as \"TN08343358\" from \"Tunisia\"",
+            "name": "I am logged in as \"TN08343357\" from \"Tunisia\"",
             "match": {
               "location": "steps\\Countries\\authAndNavigationSteps.js:6"
             },
             "result": {
               "status": "passed",
-              "duration": 13114014099
+              "duration": 1690954300
             }
           },
           {
@@ -63,9 +63,8 @@
               "location": "steps\\Countries\\authAndNavigationSteps.js:14"
             },
             "result": {
-              "status": "failed",
-              "duration": 89922315300,
-              "error_message": "page.click: Timeout 30000ms exceeded.\nCall log:\n  \u001b[2m- waiting for locator('a.profile-button')\u001b[22m\n\n    at DeliveryPage.clickUserIcon (C:\\Users\\YOGA X380\\Desktop\\test1\\pages\\Tunisia\\DeliveryPage.js:39:21)\n    at DeliveryAddButtonPage.goToDeliveryAddressSection (C:\\Users\\YOGA X380\\Desktop\\test1\\pages\\Countries\\AddDeliveryAddressPage.js:45:27)\n    at async World.<anonymous> (C:\\Users\\YOGA X380\\Desktop\\test1\\steps\\Countries\\authAndNavigationSteps.js:16:3)"
+              "status": "passed",
+              "duration": 13719727099
             }
           },
           {
@@ -77,8 +76,8 @@
               "location": "steps\\Countries\\addAddressSteps.js:32"
             },
             "result": {
-              "status": "skipped",
-              "duration": 0
+              "status": "passed",
+              "duration": 911256800
             }
           },
           {
@@ -90,8 +89,8 @@
               "location": "steps\\Countries\\addAddressSteps.js:37"
             },
             "result": {
-              "status": "skipped",
-              "duration": 0
+              "status": "passed",
+              "duration": 1221387099
             }
           },
           {
@@ -103,8 +102,8 @@
               "location": "steps\\Countries\\addAddressSteps.js:45"
             },
             "result": {
-              "status": "skipped",
-              "duration": 0
+              "status": "passed",
+              "duration": 1211223799
             }
           },
           {
@@ -116,8 +115,8 @@
               "location": "steps\\Countries\\addAddressSteps.js:53"
             },
             "result": {
-              "status": "skipped",
-              "duration": 0
+              "status": "passed",
+              "duration": 1705477300
             }
           },
           {
@@ -129,8 +128,8 @@
               "location": "steps\\Countries\\addAddressSteps.js:58"
             },
             "result": {
-              "status": "skipped",
-              "duration": 0
+              "status": "passed",
+              "duration": 1172836298
             }
           },
           {
@@ -142,8 +141,8 @@
               "location": "steps\\Countries\\addAddressSteps.js:67"
             },
             "result": {
-              "status": "skipped",
-              "duration": 0
+              "status": "passed",
+              "duration": 24166728400
             }
           },
           {
@@ -155,8 +154,8 @@
               "location": "steps\\Countries\\addAddressSteps.js:76"
             },
             "result": {
-              "status": "skipped",
-              "duration": 0
+              "status": "passed",
+              "duration": 4563120899
             }
           },
           {
@@ -168,8 +167,8 @@
               "location": "steps\\Countries\\addAddressSteps.js:85"
             },
             "result": {
-              "status": "skipped",
-              "duration": 0
+              "status": "passed",
+              "duration": 1159853800
             }
           },
           {
@@ -191,8 +190,8 @@
               "location": "steps\\Countries\\addAddressSteps.js:139"
             },
             "result": {
-              "status": "skipped",
-              "duration": 0
+              "status": "passed",
+              "duration": 17283199
             }
           },
           {
@@ -200,7 +199,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 848536700
+              "duration": 1024085600
             }
           },
           {
@@ -208,7 +207,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 1676800
+              "duration": 3267999
             }
           },
           {
@@ -216,7 +215,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 1709999
+              "duration": 1529299
             }
           },
           {
@@ -224,7 +223,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 510369500
+              "duration": 510308000
             }
           }
         ],

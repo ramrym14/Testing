@@ -64,6 +64,21 @@ stage('Check Host Memory After Tests') {
     sh 'free -h || vmstat || top -b -n1 | head -20'
   }
 }
+stage('Start Metrics Exporter') {
+      steps {
+        script {
+          echo "📊 Starting Node.js metrics exporter…"
+          sh '''
+            cd $WORKSPACE
+            if [ ! -d node_modules ]; then
+              npm install express prom-client
+            fi
+            node test_metrics_exporter.js &
+          '''
+          echo "✅ Exporter started on http://localhost:8000/metrics"
+        }
+      }
+    }
 
     stage('Archive Cucumber HTML Report') {
       steps {
