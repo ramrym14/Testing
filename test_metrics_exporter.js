@@ -1,7 +1,7 @@
-const express = require("express");
-const client = require("prom-client");
 const fs = require("fs");
 const path = require("path");
+const express = require("express");
+const client = require("prom-client");
 
 const app = express();
 const register = client.register;
@@ -15,14 +15,15 @@ function parseCucumberReport() {
   const reportPath = path.join(__dirname, "report", "cucumber-report.json");
 
   if (!fs.existsSync(reportPath)) {
-    console.error("❌ cucumber-report.json not found at:", reportPath);
+    console.error("❌ cucumber-report.json not found at", reportPath);
     return;
   }
 
   let data;
-
   try {
-    data = JSON.parse(fs.readFileSync(reportPath, "utf8"));
+    const raw = fs.readFileSync(reportPath, "utf8").trim();
+    if (!raw) throw new Error("File is empty");
+    data = JSON.parse(raw);
   } catch (err) {
     console.error("❌ Failed to parse cucumber-report.json:", err.message);
     return;
@@ -30,57 +31,45 @@ function parseCucumberReport() {
 
   let passed = 0, failed = 0, skipped = 0, duration = 0;
 
-  try {
-    data.forEach(feature => {
-      feature.elements?.forEach(scenario => {
-        let scenarioFailed = false;
+  data.forEach(feature => {
+    if (!feature.uri.includes("Countries/")) return; // 🚩 Filter only Countries
 
-        scenario.steps?.forEach(step => {
-          if (step.result.status === "failed") scenarioFailed = true;
-          if (step.result.status === "skipped") skipped++;
-          if (step.result.duration) duration += step.result.duration / 1e9; // ns → s
-        });
+    feature.elements?.forEach(scenario => {
+      let scenarioFailed = false;
 
-        if (scenarioFailed) {
-          failed++;
-        } else {
-          passed++;
-        }
+      scenario.steps.forEach(step => {
+        if (step.result.status === "failed") scenarioFailed = true;
+        if (step.result.status === "skipped") skipped++;
+        if (step.result.duration) duration += step.result.duration / 1e9; // ns → s
       });
-    });
-  } catch (err) {
-    console.error("❌ Error while processing report data:", err.message);
-    return;
-  }
 
-  // Set gauges with correct numeric values
+      if (scenarioFailed) {
+        failed++;
+      } else {
+        passed++;
+      }
+    });
+  });
+
   passedGauge.set(passed);
   failedGauge.set(failed);
   skippedGauge.set(skipped);
-  durationGauge.set(duration);
+  durationGauge.set(duration.toFixed(2));
 
   console.log(`✅ Metrics updated → Passed: ${passed}, Failed: ${failed}, Skipped: ${skipped}, Duration: ${duration.toFixed(2)}s`);
 }
 
-// Initial parse at startup
-parseCucumberReport();
-
-// Refresh metrics every 30 seconds
+// 🕒 Update metrics every 30s
 setInterval(() => {
-  try {
-    parseCucumberReport();
-  } catch (err) {
-    console.error("❌ Unexpected error while updating metrics:", err.message);
-  }
+  parseCucumberReport();
 }, 30 * 1000);
 
-// Expose metrics endpoint
+// Expose metrics
 app.get("/metrics", async (req, res) => {
   res.set("Content-Type", register.contentType);
   res.end(await register.metrics());
 });
 
-const PORT = 8000;
-app.listen(PORT, () => {
-  console.log(`🚀 Exporter listening at http://localhost:${PORT}/metrics`);
+app.listen(8000, '0.0.0.0', () => {
+  console.log(`🚀 Exporter listening at http://0.0.0.0:8000/metrics`);
 });
