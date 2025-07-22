@@ -54,9 +54,11 @@ function parseCucumberReport() {
   passedGauge.set(passed);
   failedGauge.set(failed);
   skippedGauge.set(skipped);
-  durationGauge.set(duration.toFixed(2));
+  durationGauge.set(duration);
 
-  console.log(`✅ Metrics updated → Passed: ${passed}, Failed: ${failed}, Skipped: ${skipped}, Duration: ${duration.toFixed(2)}s`);
+  console.log(
+    `✅ Metrics updated → Passed: ${passed}, Failed: ${failed}, Skipped: ${skipped}, Duration: ${duration.toFixed(2)}s`
+  );
 }
 
 // 🕒 Update metrics every 30s
