@@ -65,21 +65,24 @@ stage('Check Host Memory After Tests') {
   }
 }
 stage('Start Metrics Exporter') {
-      steps {
-        script {
-          echo "📊 Starting Node.js metrics exporter…"
-          sh '''
-            cd $WORKSPACE
-            if [ ! -d node_modules ]; then
-              npm install express prom-client
-            fi
-            node test_metrics_exporter.js &
-          '''
-          echo "✅ Exporter started on http://localhost:8000/metrics"
-        }
-      }
+  steps {
+    script {
+      echo "📊 Starting Node.js metrics exporter…"
+      sh '''
+        cd $WORKSPACE
+        if [ ! -d node_modules ]; then
+          npm install express prom-client
+        fi
+        # Run exporter and tee output to a log file
+        nohup node test_metrics_exporter.js > exporter.log 2>&1 &
+        sleep 3
+        echo "✅ Exporter started on http://localhost:8000/metrics"
+        echo "📄 Tailing metrics exporter logs..."
+        tail -n 20 -f exporter.log &
+      '''
     }
-
+  }
+}
     stage('Archive Cucumber HTML Report') {
       steps {
         archiveArtifacts artifacts: 'report/html/index.html', fingerprint: true
