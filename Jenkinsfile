@@ -51,7 +51,14 @@ stage('Run Playwright Tests Inside Container') {
 
       sh "docker exec ${CONTAINER_NAME} free -h" // inside container
 
-      sh "docker exec ${CONTAINER_NAME} xvfb-run npx cucumber-js 'features/Countries/**/*.feature' || true"
+      // 🚀 Modification ici
+      sh """
+        docker exec ${CONTAINER_NAME} bash -c '
+          rm -f /app/report/cucumber-report.json &&
+          xvfb-run npx cucumber-js "features/Countries/**/*.feature" \
+            --format json:/app/report/cucumber-report.json || true
+        '
+      """
 
       echo "📈 Docker container stats after running tests:"
       sh "docker stats --no-stream ${CONTAINER_NAME}"
