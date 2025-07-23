@@ -51,11 +51,18 @@ stage('Run Playwright Tests Inside Container') {
 
       sh "docker exec ${CONTAINER_NAME} free -h" // inside container
 
-      // 🚀 Modification: limit concurrency to avoid exit 137
+      // 🚀 Cleanup before running tests
       sh """
         docker exec ${CONTAINER_NAME} bash -c '
-          rm -f /app/report/cucumber-report.json &&
-          xvfb-run npx cucumber-js "features/Countries/**/*.feature" \
+          echo "🧹 Cleaning up Xvfb & Chrome from previous session…"
+          pkill -f Xvfb || true
+          pkill -f chrome || true
+          rm -rf /tmp/.X11-unix || true
+          rm -f /app/report/cucumber-report.json
+          
+          echo "🚀 Starting tests…"
+          xvfb-run --server-num=99 --auto-servernum --server-args="-screen 0 1280x1024x24" \
+          npx cucumber-js "features/Countries/**/*.feature" \
             --format json:/app/report/cucumber-report.json \
             --parallel 1 || true
         '
@@ -66,6 +73,7 @@ stage('Run Playwright Tests Inside Container') {
     }
   }
 }
+
 
 
 stage('Check Host Memory After Tests') {
