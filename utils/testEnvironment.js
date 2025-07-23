@@ -1,6 +1,6 @@
 const { chromium } = require('@playwright/test');
 const path = require('path');
-
+const { isCI } = require('ci-info'); 
 require('dotenv').config();
 
 let browser = null;

@@ -44,37 +44,25 @@ stage('Check Host Memory Before Tests') {
 }
 
 stage('Run Playwright Tests Inside Container') {
-  steps {
-    script {
-      echo "📈 Current Docker container stats before running tests:"
-      sh "docker stats --no-stream ${CONTAINER_NAME}"
+      steps {
+        script {
+          echo "🧹 Cleaning up previous sessions…"
+          sh """
+            docker exec ${CONTAINER_NAME} pkill -f Xvfb || true
+            docker exec ${CONTAINER_NAME} pkill -f chrome || true
+            docker exec ${CONTAINER_NAME} rm -f /app/report/cucumber-report.json || true
+          """
 
-      sh "docker exec ${CONTAINER_NAME} free -h"
-
-      echo "🚀 Starting Playwright tests inside container…"
-      sh """
-        docker exec ${CONTAINER_NAME} bash -c '
-          set -e
-          echo "🧹 Cleaning up Xvfb & Chrome from previous session…"
-          pkill -f Xvfb || true
-          pkill -f chrome || true
-          rm -rf /tmp/.X11-unix || true
-          rm -f /app/report/cucumber-report.json
-
-          echo "🚀 Running tests…"
-          xvfb-run --auto-servernum --server-args="-screen 0 1280x1024x24" \
-          npx cucumber-js "features/Countries/**/*.feature" \
-            --format json:/app/report/cucumber-report.json \
-            --parallel 1
-
-          echo "✅ Tests completed"
-        '
-      """
-      echo "📈 Docker container stats after running tests:"
-      sh "docker stats --no-stream ${CONTAINER_NAME}"
-    }
-  }
-}
+          echo "🚀 Running Playwright/Cucumber tests…"
+          sh """
+            # run headless Xvfb + Cucumber inside container:
+            docker exec ${CONTAINER_NAME} \
+              xvfb-run --auto-servernum --server-args="-screen 0 1280x1024x24" \
+              npx cucumber-js "features/**/*.feature" \
+                --format progress \
+                --format json:/app/report/cucumber-report.json
+          """
+        }
 
 
 

@@ -14,7 +14,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 3536692600
+              "duration": 2681652099
             }
           },
           {
@@ -22,7 +22,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 1523770100
+              "duration": 1140902000
             }
           },
           {
@@ -30,7 +30,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 144185600
+              "duration": 163415299
             }
           },
           {
@@ -38,7 +38,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 139822299
+              "duration": 2751030600
             }
           },
           {
@@ -51,7 +51,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 2435979298
+              "duration": 1812314998
             }
           },
           {
@@ -63,8 +63,9 @@
               "location": "steps\\Countries\\authAndNavigationSteps.js:14"
             },
             "result": {
-              "status": "passed",
-              "duration": 47733328899
+              "status": "failed",
+              "duration": 3990222900,
+              "error_message": "page.screenshot: Target page, context or browser has been closed\n    at DeliveryPage.takeScreenshot (C:\\Users\\YOGA X380\\Desktop\\test1\\pages\\Tunisia\\DeliveryPage.js:22:21)\n    at DeliveryAddButtonPage.goToDeliveryAddressSection (C:\\Users\\YOGA X380\\Desktop\\test1\\pages\\Countries\\AddDeliveryAddressPage.js:54:27)\n    at async World.<anonymous> (C:\\Users\\YOGA X380\\Desktop\\test1\\steps\\Countries\\authAndNavigationSteps.js:16:3)"
             }
           },
           {
@@ -76,8 +77,8 @@
               "location": "steps\\Countries\\addAddressSteps.js:32"
             },
             "result": {
-              "status": "passed",
-              "duration": 1039936399
+              "status": "skipped",
+              "duration": 0
             }
           },
           {
@@ -89,8 +90,8 @@
               "location": "steps\\Countries\\addAddressSteps.js:37"
             },
             "result": {
-              "status": "passed",
-              "duration": 4782178199
+              "status": "skipped",
+              "duration": 0
             }
           },
           {
@@ -102,8 +103,8 @@
               "location": "steps\\Countries\\addAddressSteps.js:45"
             },
             "result": {
-              "status": "passed",
-              "duration": 5078405900
+              "status": "skipped",
+              "duration": 0
             }
           },
           {
@@ -115,8 +116,8 @@
               "location": "steps\\Countries\\addAddressSteps.js:53"
             },
             "result": {
-              "status": "passed",
-              "duration": 9307653799
+              "status": "skipped",
+              "duration": 0
             }
           },
           {
@@ -128,8 +129,8 @@
               "location": "steps\\Countries\\addAddressSteps.js:58"
             },
             "result": {
-              "status": "passed",
-              "duration": 4804936799
+              "status": "skipped",
+              "duration": 0
             }
           },
           {
@@ -141,8 +142,8 @@
               "location": "steps\\Countries\\addAddressSteps.js:67"
             },
             "result": {
-              "status": "passed",
-              "duration": 38133517799
+              "status": "skipped",
+              "duration": 0
             }
           },
           {
@@ -154,8 +155,8 @@
               "location": "steps\\Countries\\addAddressSteps.js:76"
             },
             "result": {
-              "status": "passed",
-              "duration": 15499768200
+              "status": "skipped",
+              "duration": 0
             }
           },
           {
@@ -167,8 +168,8 @@
               "location": "steps\\Countries\\addAddressSteps.js:85"
             },
             "result": {
-              "status": "passed",
-              "duration": 4497613399
+              "status": "skipped",
+              "duration": 0
             }
           },
           {
@@ -190,8 +191,8 @@
               "location": "steps\\Countries\\addAddressSteps.js:139"
             },
             "result": {
-              "status": "passed",
-              "duration": 15722199
+              "status": "skipped",
+              "duration": 0
             }
           },
           {
@@ -199,7 +200,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 859484300
+              "duration": 533589600
             }
           },
           {
@@ -207,7 +208,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 3835900
+              "duration": 7427999
             }
           },
           {
@@ -215,7 +216,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 2610600
+              "duration": 4694100
             }
           },
           {
@@ -223,7 +224,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 513346799
+              "duration": 501317200
             }
           }
         ],

@@ -10,6 +10,7 @@
     "@applitools/eyes-playwright": "^1.37.3",
     "@cucumber/cucumber": "^11.2.0",
     "@playwright/test": "^1.46.1",
+    "ci-info": "^4.3.0",
     "cucumber-html-reporter": "^7.2.0",
     "multiple-cucumber-html-reporter": "^3.9.2"
   },
