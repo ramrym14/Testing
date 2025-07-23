@@ -44,25 +44,26 @@ stage('Check Host Memory Before Tests') {
 }
 
 stage('Run Playwright Tests Inside Container') {
-      steps {
-        script {
-          echo "🧹 Cleaning up previous sessions…"
-          sh """
-            docker exec ${CONTAINER_NAME} pkill -f Xvfb || true
-            docker exec ${CONTAINER_NAME} pkill -f chrome || true
-            docker exec ${CONTAINER_NAME} rm -f /app/report/cucumber-report.json || true
-          """
+  steps {
+    script {
+      echo "🧹 Cleaning up previous sessions…"
+      sh """
+        docker exec ${CONTAINER_NAME} pkill -f Xvfb || true
+        docker exec ${CONTAINER_NAME} pkill -f chrome || true
+        docker exec ${CONTAINER_NAME} rm -f /app/report/cucumber-report.json || true
+      """
 
-          echo "🚀 Running Playwright/Cucumber tests…"
-          sh """
-            # run headless Xvfb + Cucumber inside container:
-            docker exec ${CONTAINER_NAME} \
-              xvfb-run --auto-servernum --server-args="-screen 0 1280x1024x24" \
-              npx cucumber-js "features/**/*.feature" \
-                --format progress \
-                --format json:/app/report/cucumber-report.json
-          """
-        }
+      echo "🚀 Running Playwright/Cucumber tests…"
+      sh """
+        docker exec ${CONTAINER_NAME} \
+          xvfb-run --auto-servernum --server-args="-screen 0 1280x1024x24" \
+          npx cucumber-js "features/**/*.feature" \
+            --format progress \
+            --format json:/app/report/cucumber-report.json
+      """
+    }  // ← closes script
+  }    // ← closes steps
+}      // ← closes stage
 
 
 
