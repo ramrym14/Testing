@@ -49,9 +49,9 @@ stage('Run Playwright Tests Inside Container') {
       echo "📈 Current Docker container stats before running tests:"
       sh "docker stats --no-stream ${CONTAINER_NAME}"
 
-      sh "docker exec ${CONTAINER_NAME} free -h" // inside container
+      sh "docker exec ${CONTAINER_NAME} free -h"
 
-      // 🚀 Cleanup before running tests
+      // Run and wait for tests properly
       sh """
         docker exec ${CONTAINER_NAME} bash -c '
           echo "🧹 Cleaning up Xvfb & Chrome from previous session…"
@@ -59,20 +59,21 @@ stage('Run Playwright Tests Inside Container') {
           pkill -f chrome || true
           rm -rf /tmp/.X11-unix || true
           rm -f /app/report/cucumber-report.json
-          
+
           echo "🚀 Starting tests…"
-          xvfb-run --server-num=99 --auto-servernum --server-args="-screen 0 1280x1024x24" \
+          set -e
+          xvfb-run --auto-servernum --server-args="-screen 0 1280x1024x24" \
           npx cucumber-js "features/Countries/**/*.feature" \
             --format json:/app/report/cucumber-report.json \
-            --parallel 1 || true
+            --parallel 1
+
+          echo "✅ Tests completed"
         '
       """
-
-      echo "📈 Docker container stats after running tests:"
-      sh "docker stats --no-stream ${CONTAINER_NAME}"
     }
   }
 }
+
 
 
 
