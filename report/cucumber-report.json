@@ -4,17 +4,17 @@
     "elements": [
       {
         "description": "",
-        "id": "delivery-address-behavior-based-on-selected-country;verify-add-button-behavior-and-address-form-outcome-by-selected-country",
+        "id": "delete-delivery-address;try-to-delete-delivery-addresses-from-different-cases",
         "keyword": "Scenario Outline",
-        "line": 22,
-        "name": "Verify ADD button behavior and address form outcome by selected country",
+        "line": 19,
+        "name": "Try to delete delivery addresses from different cases",
         "steps": [
           {
             "keyword": "Before",
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 2681652099
+              "duration": 2347955399
             }
           },
           {
@@ -22,7 +22,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 1140902000
+              "duration": 1068469900
             }
           },
           {
@@ -30,7 +30,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 163415299
+              "duration": 144109099
             }
           },
           {
@@ -38,7 +38,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 2751030600
+              "duration": 2629610499
             }
           },
           {
@@ -51,7 +51,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 1812314998
+              "duration": 1738025198
             }
           },
           {
@@ -63,136 +63,112 @@
               "location": "steps\\Countries\\authAndNavigationSteps.js:14"
             },
             "result": {
-              "status": "failed",
-              "duration": 3990222900,
-              "error_message": "page.screenshot: Target page, context or browser has been closed\n    at DeliveryPage.takeScreenshot (C:\\Users\\YOGA X380\\Desktop\\test1\\pages\\Tunisia\\DeliveryPage.js:22:21)\n    at DeliveryAddButtonPage.goToDeliveryAddressSection (C:\\Users\\YOGA X380\\Desktop\\test1\\pages\\Countries\\AddDeliveryAddressPage.js:54:27)\n    at async World.<anonymous> (C:\\Users\\YOGA X380\\Desktop\\test1\\steps\\Countries\\authAndNavigationSteps.js:16:3)"
-            }
-          },
-          {
-            "arguments": [],
-            "keyword": "When ",
-            "line": 7,
-            "name": "I select \"\"",
-            "match": {
-              "location": "steps\\Countries\\addAddressSteps.js:32"
-            },
-            "result": {
-              "status": "skipped",
-              "duration": 0
-            }
-          },
-          {
-            "arguments": [],
-            "keyword": "Then ",
-            "line": 8,
-            "name": "the \"ADD\" button should be visible",
-            "match": {
-              "location": "steps\\Countries\\addAddressSteps.js:37"
-            },
-            "result": {
-              "status": "skipped",
-              "duration": 0
+              "status": "passed",
+              "duration": 13575954499
             }
           },
           {
             "arguments": [],
             "keyword": "And ",
-            "line": 9,
-            "name": "the \"ADD\" button should be enabled",
+            "line": 7,
+            "name": "I switch to country \"\" if needed",
             "match": {
-              "location": "steps\\Countries\\addAddressSteps.js:45"
+              "location": "steps\\Countries\\deleteDeliverySteps.js:27"
             },
             "result": {
-              "status": "skipped",
-              "duration": 0
+              "status": "passed",
+              "duration": 785409598
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 8,
+            "name": "I store the text of the first address in the list",
+            "match": {
+              "location": "steps\\Countries\\deleteDeliverySteps.js:34"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 38173600
             }
           },
           {
             "arguments": [],
             "keyword": "When ",
-            "line": 10,
-            "name": "I click on the \"ADD\" button",
+            "line": 9,
+            "name": "I click the delete icon of the first address",
             "match": {
-              "location": "steps\\Countries\\addAddressSteps.js:53"
+              "location": "steps\\Countries\\deleteDeliverySteps.js:38"
             },
             "result": {
-              "status": "skipped",
-              "duration": 0
+              "status": "passed",
+              "duration": 1532045198
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 10,
+            "name": "I choose to \"Cancel\" the deletion",
+            "match": {
+              "location": "steps\\Countries\\deleteDeliverySteps.js:43"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1931849199
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 11,
+            "name": "I choose to \"Cancel\" the deletion",
+            "match": {
+              "location": "steps\\Countries\\deleteDeliverySteps.js:43"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1920488599
             }
           },
           {
             "arguments": [],
             "keyword": "Then ",
-            "line": 11,
-            "name": "the Add Address modal should be open",
-            "match": {
-              "location": "steps\\Countries\\addAddressSteps.js:58"
-            },
-            "result": {
-              "status": "skipped",
-              "duration": 0
-            }
-          },
-          {
-            "arguments": [],
-            "keyword": "When ",
             "line": 12,
-            "name": "I fill the Add Address form with \"validData\"",
+            "name": "I should not see the success message",
             "match": {
-              "location": "steps\\Countries\\addAddressSteps.js:67"
+              "location": "steps\\Countries\\deleteDeliverySteps.js:54"
             },
             "result": {
-              "status": "skipped",
-              "duration": 0
+              "status": "passed",
+              "duration": 3683310999
             }
           },
           {
             "arguments": [],
             "keyword": "And ",
             "line": 13,
-            "name": "I click on \"REGISTER\"",
+            "name": "I click OK to close the success message if visible",
             "match": {
-              "location": "steps\\Countries\\addAddressSteps.js:76"
+              "location": "steps\\Countries\\deleteDeliverySteps.js:59"
             },
             "result": {
-              "status": "skipped",
-              "duration": 0
+              "status": "passed",
+              "duration": 3010275900
             }
           },
           {
             "arguments": [],
             "keyword": "Then ",
             "line": 14,
-            "name": "the address should be \"success\"",
+            "name": "I should still see the address in the list",
             "match": {
-              "location": "steps\\Countries\\addAddressSteps.js:85"
+              "location": "steps\\Countries\\deleteDeliverySteps.js:63"
             },
             "result": {
-              "status": "skipped",
-              "duration": 0
-            }
-          },
-          {
-            "arguments": [
-              {
-                "rows": [
-                  {
-                    "cells": [
-                      "Operation performed successfully"
-                    ]
-                  }
-                ]
-              }
-            ],
-            "keyword": "And ",
-            "line": 15,
-            "name": "I should see the messages:",
-            "match": {
-              "location": "steps\\Countries\\addAddressSteps.js:139"
-            },
-            "result": {
-              "status": "skipped",
-              "duration": 0
+              "status": "passed",
+              "duration": 695302798
             }
           },
           {
@@ -200,7 +176,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 533589600
+              "duration": 616107499
             }
           },
           {
@@ -208,7 +184,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 7427999
+              "duration": 8778200
             }
           },
           {
@@ -216,7 +192,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 4694100
+              "duration": 4514000
             }
           },
           {
@@ -224,37 +200,37 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 501317200
+              "duration": 501685600
             }
           }
         ],
         "tags": [
           {
-            "name": "@add",
+            "name": "@delete",
             "line": 1
           },
           {
-            "name": "@high",
+            "name": "@low",
             "line": 1
           }
         ],
         "type": "scenario"
       }
     ],
-    "id": "delivery-address-behavior-based-on-selected-country",
+    "id": "delete-delivery-address",
     "line": 2,
     "keyword": "Feature",
-    "name": "Delivery address behavior based on selected country",
+    "name": "Delete delivery address",
     "tags": [
       {
-        "name": "@add",
+        "name": "@delete",
         "line": 1
       },
       {
-        "name": "@high",
+        "name": "@low",
         "line": 1
       }
     ],
-    "uri": "features\\Countries\\AddDeliveryAddress.feature"
+    "uri": "features\\Countries\\DeleteDeliveryAdress.feature"
   }
 ]
