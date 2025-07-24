@@ -105,7 +105,7 @@ stage('Start Metrics Exporter') {
 
     stage('Deploy Report to GitHub Pages') {
       steps {
-        sshagent(['ssh-key-for-github']) {
+        sshagent(['github_ssh_key']) {
           script {
             sh '''
               rm -rf gh-pages-tmp
