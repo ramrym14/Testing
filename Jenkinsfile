@@ -28,20 +28,23 @@ pipeline {
       }
     }
 
- stage('Start Container') {
-      steps {
-        echo "🚀 Starting fresh container…"
-        sh """
-          docker rm -f ${CONTAINER_NAME} || true
+    
+stage('Start Container') {
+  steps {
+    echo "🚀 Starting fresh container…"
+    sh """
+      docker rm -f ${CONTAINER_NAME} || true
 
-          # run container from the image (no workspace bind-mount)
-          docker run -d --name ${CONTAINER_NAME} \\
-            -e CI=true \\
-            ${IMAGE_NAME} \\
-            tail -f /dev/null
-        """
-      }
-    }
+      # run container from the image with access to app-network
+      docker run -d --name ${CONTAINER_NAME} \\
+        --network app-network \\  # ✅ Ajouté ici pour que Prometheus le voie
+        -e CI=true \\
+        ${IMAGE_NAME} \\
+        tail -f /dev/null
+    """
+  }
+}
+
 
 stage('Run Playwright/Cucumber Tests') {
   steps {
