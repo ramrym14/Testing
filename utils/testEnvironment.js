@@ -6,7 +6,8 @@ require('dotenv').config();
 let browser = null;
 let context = null;
 let page = null;
-
+// Ensure we get a real boolean
+const isCI = process.env.CI === 'true';
 
 async function startNewSession() {
   if (browser && context && page) {
