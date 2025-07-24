@@ -18,8 +18,8 @@ async function startNewSession() {
   try {
     const browser = await chromium.launch({
   channel: 'chrome',
-  headless: isCI,          // headless in CI
-  slowMo: isCI ? 0 : 150,  // no delay in CI
+  headless: true,          // headless in CI
+  // no delay in CI
 });
    // browser = await chromium.launch({
     //  channel: 'chrome',
