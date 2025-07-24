@@ -43,26 +43,26 @@ pipeline {
       }
     }
 
- stage('Run Playwright Tests Inside Container') {
+stage('Run Playwright/Cucumber Tests') {
   steps {
     script {
-      echo "🧹 Cleaning up previous sessions…"
+      // Clean up any old report
       sh """
-        docker exec ${CONTAINER_NAME} pkill -f chrome || true
         docker exec ${CONTAINER_NAME} rm -f /app/report/cucumber-report.json || true
       """
 
-      echo "🚀 Running Playwright/Cucumber tests (headless)…"
+      // Run cucumber-js under bash -lc so it picks up the shebang & PATH correctly
       sh """
-        docker exec -e CI=true ${CONTAINER_NAME} \
-          npx cucumber-js features/Countries/**/*.feature \
+        docker exec \
+          -w /app \
+          ${CONTAINER_NAME} \
+          bash -lc "npx cucumber-js features/Countries/**/*.feature \
             --format progress \
-            --format json:/app/report/cucumber-report.json
+            --format json:/app/report/cucumber-report.json"
       """
     }
   }
 }
-
 
 
 stage('Start Metrics Exporter') {
