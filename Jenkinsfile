@@ -4,7 +4,7 @@ pipeline {
   environment {
     CI             = 'true'   
     IMAGE_NAME = "test1-playwright"
-    CONTAINER_NAME = "playwrights"
+    CONTAINER_NAME = "playwright"
     GIT_REPO = 'git@github.com:ramrym14/Testing.git'
     GIT_BRANCH = 'gh-pages'
     REPORT_DIR = 'report/html'
