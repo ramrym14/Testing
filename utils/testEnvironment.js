@@ -1,4 +1,5 @@
 const { chromium } = require('@playwright/test');
+const { chromium } = require('playwright');
 const path = require('path');
 const { isCI } = require('ci-info'); 
 require('dotenv').config();
@@ -16,16 +17,16 @@ async function startNewSession() {
   }
 
   try {
-    const browser = await chromium.launch({
+     browser = await chromium.launch({
   channel: 'chrome',
   headless: true,          // headless in CI
-  // no delay in CI
-});
-   // browser = await chromium.launch({
-    //  channel: 'chrome',
+   });
+
+    //browser = await chromium.launch({
+     // channel: 'chrome',
     // headless: false,        // Visible browser for debugging
-   //   slowMo: 150,            // Delay for step visibility
-   //});
+     // slowMo: 150,            // Delay for step visibility
+   //  });
 
     context = await browser.newContext({
       userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/123.0.0.0 Safari/537.36',

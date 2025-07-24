@@ -18,34 +18,31 @@ pipeline {
       }
     }
 
- 
-    stage('Build Docker Image') {
+ stage('Check Docker and Docker Compose') {
       steps {
         script {
-          echo "🔨 Building test image…"
-          sh "docker build -t ${IMAGE_NAME} ."
-        }
-      }
-    }
-
-    stage('Start Container') {
-      steps {
-        script {
-          echo "🚀 Starting fresh container…"
+          sh 'docker --version'
           sh """
-            # remove any stale container
-            docker rm -f ${CONTAINER_NAME} || true
-
-            # run detached, mount workspace, set CI=true, keep container alive with tail
-            docker run -d --name ${CONTAINER_NAME} \\
-              -e CI=true \\
-              -v \$WORKSPACE:/app \\
-              -w /app \\
-              ${IMAGE_NAME} tail -f /dev/null
+            if [ "\$(docker ps -q -f name=${CONTAINER_NAME})" ]; then
+              echo "✅ Container '${CONTAINER_NAME}' is already running. Nothing to do."
+            elif [ "\$(docker ps -aq -f name=${CONTAINER_NAME})" ]; then
+              echo "♻️ Container '${CONTAINER_NAME}' exists but stopped. Starting it..."
+              docker start ${CONTAINER_NAME}
+            else
+              echo "🚀 Container '${CONTAINER_NAME}' does not exist. Creating and starting it..."
+              docker-compose up -d playwright
+            fi
           """
+          echo "🛠️ Docker and Docker Compose OK"
         }
       }
     }
+
+stage('Check Host Memory Before Tests') {
+  steps {
+    sh 'free -h || vmstat || top -b -n1 | head -20'
+  }
+}
 
  stage('Run Playwright Tests Inside Container') {
   steps {
@@ -69,6 +66,15 @@ pipeline {
 
 
 
+
+
+
+
+stage('Check Host Memory After Tests') {
+  steps {
+    sh 'free -h || vmstat || top -b -n1 | head -20'
+  }
+}
 stage('Start Metrics Exporter') {
   steps {
     script {
