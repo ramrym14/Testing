@@ -1,0 +1,9 @@
+apiVersion: 1
+
+providers:
+  - name: 'automated-testing'
+    folder: 'Test Dashboards'
+    type: file
+    updateIntervalSeconds: 15
+    options:
+      path: /etc/grafana/dashboards

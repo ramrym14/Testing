@@ -1,0 +1,54 @@
+{
+  "uid": "bdd-tests",
+  "title": "BDD Test Dashboard",
+  "timezone": "browser",
+  "schemaVersion": 30,
+  "version": 1,
+  "refresh": "30s",
+  "panels": [
+    {
+      "type": "stat",
+      "title": "✅ Tests Passed",
+      "gridPos": { "x": 0, "y": 0, "w": 6, "h": 3 },
+      "targets": [
+        {
+          "expr": "tests_passed",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "type": "stat",
+      "title": "❌ Tests Failed",
+      "gridPos": { "x": 6, "y": 0, "w": 6, "h": 3 },
+      "targets": [
+        {
+          "expr": "tests_failed",
+          "refId": "B"
+        }
+      ]
+    },
+    {
+      "type": "stat",
+      "title": "⏱ Test Duration (s)",
+      "gridPos": { "x": 0, "y": 3, "w": 6, "h": 3 },
+      "targets": [
+        {
+          "expr": "tests_duration_seconds",
+          "refId": "C"
+        }
+      ]
+    },
+    {
+      "type": "stat",
+      "title": "🧠 Playwright RAM (MB)",
+      "gridPos": { "x": 6, "y": 3, "w": 6, "h": 3 },
+      "targets": [
+        {
+          "expr": "container_memory_usage_bytes{container_label_com_docker_swarm_service_name=\"playwrights\"} / 1024 / 1024",
+          "refId": "D"
+        }
+      ]
+    }
+  ]
+}

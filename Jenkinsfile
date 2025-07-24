@@ -68,22 +68,18 @@ stage('Run Playwright/Cucumber Tests') {
 stage('Start Metrics Exporter') {
   steps {
     script {
-      echo "📊 Starting Node.js metrics exporter…"
-      sh '''
-        cd $WORKSPACE
-        if [ ! -d node_modules ]; then
-          npm install express prom-client
-        fi
-        # Run exporter and tee output to a log file
-        nohup node test_metrics_exporter.js > exporter.log 2>&1 &
-        sleep 3
-        echo "✅ Exporter started on http://localhost:8000/metrics"
-        echo "📄 Tailing metrics exporter logs..."
-        tail -n 20 -f exporter.log &
-      '''
+      echo "📊 Starting metrics exporter inside container..."
+      sh """
+        docker exec -d ${CONTAINER_NAME} bash -c '
+          nohup node /app/test_metrics_exporter.js > /app/exporter.log 2>&1 &
+          sleep 3
+        '
+        docker exec ${CONTAINER_NAME} curl -s http://localhost:8000/metrics || echo "❌ Exporter failed"
+      """
     }
   }
 }
+
     stage('Archive Cucumber HTML Report') {
       steps {
         archiveArtifacts artifacts: 'report/html/index.html', fingerprint: true
