@@ -102,27 +102,29 @@ stage('Start Metrics Exporter') {
         ])
       }
     }
+stage('Deploy Report to GitHub Pages') {
+  steps {
+    sshagent(['github_ssh_key']) {
+      script {
+        sh '''
+          mkdir -p ~/.ssh
+          ssh-keyscan github.com >> ~/.ssh/known_hosts
 
-    stage('Deploy Report to GitHub Pages') {
-      steps {
-        sshagent(['github_ssh_key']) {
-          script {
-            sh '''
-              rm -rf gh-pages-tmp
-              git clone --branch=${GIT_BRANCH} ${GIT_REPO} gh-pages-tmp
-              rm -rf gh-pages-tmp/*
-              cp -r ${REPORT_DIR}/* gh-pages-tmp/
-              cd gh-pages-tmp
-              git config user.name "jenkins"
-              git config user.email "jenkins@example.com"
-              git add .
-              git commit -m "📝 Update test report $(date +'%Y-%m-%d %H:%M:%S')" || echo "No changes to commit"
-              git push origin ${GIT_BRANCH}
-            '''
-          }
-        }
+          rm -rf gh-pages-tmp
+          git clone --branch=${GIT_BRANCH} ${GIT_REPO} gh-pages-tmp
+          rm -rf gh-pages-tmp/*
+          cp -r ${REPORT_DIR}/* gh-pages-tmp/
+          cd gh-pages-tmp
+          git config user.name "jenkins"
+          git config user.email "jenkins@example.com"
+          git add .
+          git commit -m "📝 Update test report $(date +'%Y-%m-%d %H:%M:%S')" || echo "No changes to commit"
+          git push origin ${GIT_BRANCH}
+        '''
       }
     }
+  }
+}
 
 
 
