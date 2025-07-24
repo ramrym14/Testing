@@ -19,7 +19,7 @@ services:
 
   playwright:
     build: .
-    container_name: playwrights
+    container_name: playwright
     ports:
       - "8000:8000"  
     # aucun bind-mount global pour ne PAS écraser node_modules
