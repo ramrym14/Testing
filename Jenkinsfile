@@ -44,31 +44,26 @@ stage('Check Host Memory Before Tests') {
   }
 }
 
- stage('Run Playwright Tests Inside Container') {
-   steps {
-     script {
-       echo "🧹 Cleaning up previous sessions…"
-       sh """
-         docker exec ${CONTAINER_NAME} pkill -f chrome || true
-         docker exec ${CONTAINER_NAME} rm -f /app/report/cucumber-report.json || true
-       """
+stage('Run Playwright Tests Inside Container') {
+  steps {
+    script {
+      echo "🧹 Cleaning up previous sessions…"
+      sh """
+        docker exec ${CONTAINER_NAME} pkill -f chrome || true
+        docker exec ${CONTAINER_NAME} rm -f /app/report/cucumber-report.json || true
+      """
 
-       echo "🚀 Running Playwright/Cucumber tests…"
--      sh """
--        docker exec ${CONTAINER_NAME} \
--          npx cucumber-js "features/Countries/**/*.feature" \
--            --format progress \
--            --format json:/app/report/cucumber-report.json
--      """
-+      sh """
-+        docker exec -e CI=true ${CONTAINER_NAME} \
-+          npx cucumber-js "features/Countries/**/*.feature" \
-+            --format progress \
-+            --format json:/app/report/cucumber-report.json
-+      """
-     }
-   }
- }
+      echo "🚀 Running Playwright/Cucumber tests…"
+      sh """
+        docker exec -e CI=true ${CONTAINER_NAME} \
+          npx cucumber-js "features/Countries/**/*.feature" \
+          --format progress \
+          --format json:/app/report/cucumber-report.json
+      """
+    }
+  }
+}
+
 
 
 
