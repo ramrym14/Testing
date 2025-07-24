@@ -28,22 +28,18 @@ pipeline {
       }
     }
 
-    stage('Start Container') {
+ stage('Start Container') {
       steps {
-        script {
-          echo "🚀 Starting fresh container…"
-          sh """
-            # remove any stale container
-            docker rm -f ${CONTAINER_NAME} || true
+        echo "🚀 Starting fresh container…"
+        sh """
+          docker rm -f ${CONTAINER_NAME} || true
 
-            # run detached, mount workspace, set CI=true, keep container alive with tail
-            docker run -d --name ${CONTAINER_NAME} \\
-              -e CI=true \\
-              -v \$WORKSPACE:/app \\
-              -w /app \\
-              ${IMAGE_NAME} tail -f /dev/null
-          """
-        }
+          # run container from the image (no workspace bind-mount)
+          docker run -d --name ${CONTAINER_NAME} \\
+            -e CI=true \\
+            ${IMAGE_NAME} \\
+            tail -f /dev/null
+        """
       }
     }
 
