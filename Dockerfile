@@ -7,8 +7,8 @@ COPY package*.json ./
 RUN npm install
 RUN npm install @cucumber/cucumber --save-dev
 
-# ✅ Fix binary permissions
-RUN chmod -R a+x node_modules/.bin
+# ✅  les permissions
+RUN chmod -R +x /app/node_modules/.bin
 
 # ✅ Add local binaries to PATH (so npx works)
 ENV PATH="/app/node_modules/.bin:${PATH}"
