@@ -67,7 +67,6 @@ stage('Run Playwright/Cucumber Tests') {
   }
 }
 
-
 stage('Start Metrics Exporter') {
   steps {
     script {
@@ -77,7 +76,13 @@ stage('Start Metrics Exporter') {
           nohup node /app/test_metrics_exporter.js > /app/exporter.log 2>&1 &
           sleep 3
         '
-        docker exec ${CONTAINER_NAME} curl -s http://localhost:8000/metrics || echo "❌ Exporter failed"
+        
+        echo "🔍 Checking if metrics are available..."
+        if docker exec ${CONTAINER_NAME} curl -sf http://localhost:8000/metrics > /dev/null; then
+          echo "✅ Exporter is working and metrics are available"
+        else
+          echo "❌ Exporter failed to respond"
+        fi
       """
     }
   }
