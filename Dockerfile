@@ -2,25 +2,31 @@ FROM mcr.microsoft.com/playwright:next-focal
 
 WORKDIR /app
 
-# Copie les dépendances et installe-les
+# 1. Copier les dépendances
 COPY package*.json ./
+
+# 2. Installer les dépendances du projet
 RUN npm install
 
-# Forcer installation de Cucumber
+# 3. Installer Cucumber (BDD)
 RUN npm install @cucumber/cucumber --save-dev
 
+# ✅ 4. Corriger les permissions sur les binaires locaux
+RUN chmod -R a+x node_modules/.bin
 
-# Met les binaires locaux dans le PATH  (cucumber-js, playwright, …)
+# 5. Ajouter les binaires locaux dans le PATH (pour pouvoir appeler cucumber-js, playwright, etc.)
 ENV PATH="/app/node_modules/.bin:${PATH}"
 
-# Mise à jour des certificats + Chrome
+# 6. Mise à jour des certificats et installation Chrome
 RUN apt-get update && apt-get install -y ca-certificates && update-ca-certificates
 RUN npx playwright install --with-deps chrome
-RUN  apt-get install -y xvfb
 
-# Copie du reste du projet
+# 7. (Optionnel) Installer xvfb, utile uniquement si tu utilises Chrome en mode headful
+RUN apt-get install -y xvfb
+
+# 8. Copier le reste du code
 COPY . .
 
+# ✅ 9. Commande par défaut — peut être remplacée dans Jenkins par `npx cucumber-js`
+CMD ["npx", "cucumber-js"]
 
-# 5. Commande par défaut (CMD remplaçable)
-CMD ["node", "node_modules/@cucumber/cucumber/bin/cucumber-js"]
