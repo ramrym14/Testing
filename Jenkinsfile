@@ -71,22 +71,42 @@ stage('Start Metrics Exporter') {
   steps {
     script {
       echo "📊 Starting metrics exporter inside container..."
+
+      // Start the exporter process (non-blocking)
       sh """
         docker exec -d ${CONTAINER_NAME} bash -c '
           nohup node /app/test_metrics_exporter.js > /app/exporter.log 2>&1 &
-          sleep 3
         '
-        
-        echo "🔍 Checking if metrics are available..."
-        if docker exec ${CONTAINER_NAME} curl -sf http://localhost:8000/metrics > /dev/null; then
-          echo "✅ Exporter is working and metrics are available"
-        else
-          echo "❌ Exporter failed to respond"
-        fi
       """
+
+      // Wait and check for metrics to be available (retry loop)
+      def success = false
+      for (int i = 0; i < 10; i++) {
+        def result = sh(
+          script: "docker exec ${CONTAINER_NAME} curl -sf http://localhost:8000/metrics || true",
+          returnStdout: true
+        ).trim()
+
+        if (result.contains("tests_passed") || result.contains("tests_failed")) {
+          echo "✅ Exporter is up and responding."
+          success = true
+          break
+        }
+
+        echo "⏳ Waiting for exporter... (${i + 1}/10)"
+        sleep 2
+      }
+
+      if (!success) {
+        error("❌ Exporter failed to start or did not respond with metrics.")
+      }
     }
   }
 }
+
+
+
+
 
     stage('Archive Cucumber HTML Report') {
       steps {
