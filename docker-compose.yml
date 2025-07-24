@@ -51,14 +51,13 @@ services:
    container_name: grafana
    restart: unless-stopped
    ports:
-     - "3000:3000"         # Grafana UI
+    - "3000:3000"
    networks:
-     - app-network
+    - app-network
    volumes:
-     - grafana_data:/var/lib/grafana                # données internes Grafana (OK)
-     - ./grafana/provisioning:/etc/grafana/provisioning     # 👈 fichiers de provisioning YAML
-     - ./grafana/dashboards:/etc/grafana/dashboards         # 👈 dashboards JSON provisionnés
-
+    - grafana_data:/var/lib/grafana
+    - ./grafana/provisioning:/etc/grafana/provisioning
+    - ./grafana/dashboards:/etc/grafana/dashboards
 
   cadvisor:
     image: gcr.io/cadvisor/cadvisor:latest
