@@ -155,7 +155,7 @@ stage('Deploy Report to GitHub Pages') {
       steps {
         script {
           echo "🔎 Checking cAdvisor..."
-          sh "curl -s http://cadvisor:8081/ || echo '⚠️ cAdvisor not reachable'"
+          sh "curl -s http://cadvisor:8080/ || echo '⚠️ cAdvisor not reachable'"
         }
       }
     }
