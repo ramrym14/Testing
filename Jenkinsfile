@@ -28,7 +28,7 @@ pipeline {
       }
     }
 
-    
+
 stage('Start Container') {
   steps {
     echo "🚀 Starting fresh container…"
@@ -39,6 +39,7 @@ stage('Start Container') {
       docker run -d --name ${CONTAINER_NAME} \\
         --network app-network \\  # ✅ Ajouté ici pour que Prometheus le voie
         -e CI=true \\
+         -p 8000:8000 \
         ${IMAGE_NAME} \\
         tail -f /dev/null
     """
