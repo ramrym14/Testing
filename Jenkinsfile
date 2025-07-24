@@ -47,22 +47,18 @@ stage('Check Host Memory Before Tests') {
 stage('Run Playwright Tests Inside Container') {
   steps {
     script {
-      echo "🧹 Cleaning up previous sessions…"
+      echo "🚀 Running tests under Xvfb…"
       sh """
-        docker exec ${CONTAINER_NAME} pkill -f chrome || true
-        docker exec ${CONTAINER_NAME} rm -f /app/report/cucumber-report.json || true
-      """
-
-      echo "🚀 Running Playwright/Cucumber tests…"
-      sh """
-        docker exec -e CI=true ${CONTAINER_NAME} \
-          npx cucumber-js "features/Countries/**/*.feature" \
-          --format progress \
-          --format json:/app/report/cucumber-report.json
+        docker exec ${CONTAINER_NAME} \
+          xvfb-run --auto-servernum --server-args="-screen 0 1280x1024x24" \
+            npx cucumber-js "features/Countries/**/*.feature" \
+              --format progress \
+              --format json:/app/report/cucumber-report.json
       """
     }
   }
 }
+
 
 
 
