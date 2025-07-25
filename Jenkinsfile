@@ -30,21 +30,20 @@ pipeline {
 
 
 stage('Start Container') {
-      steps {
-        echo "🚀 Starting fresh container…"
-        sh """
-          docker rm -f ${CONTAINER_NAME} || true
-
-          docker run -d --name ${CONTAINER_NAME} \\
-            --network app-network \\
-            -e CI=true \\
-            -p 8000:8000 \\
-            ${IMAGE_NAME} \\
-            tail -f /dev/null
-        """
-      }
-    }
-
+  steps {
+    echo "🚀 Starting fresh container…"
+    sh """
+      docker rm -f ${CONTAINER_NAME} || true
+      docker run -d \
+        --name ${CONTAINER_NAME} \
+        --network app-network \
+        -e CI=true \
+        -p 8000:8000 \
+        --restart unless-stopped \
+        ${IMAGE_NAME}
+    """
+  }
+}
 
 stage('Run Playwright/Cucumber Tests') {
   steps {
