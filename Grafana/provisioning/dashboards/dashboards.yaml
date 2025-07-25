@@ -1,7 +1,11 @@
 apiVersion: 1
-datasources:
-  - name: Prometheus
-    type: prometheus
-    access: proxy
-    url: http://prometheus:9090
-    isDefault: true
+
+providers:
+  - name: 'bdd-test-dashboards'
+    orgId: 1
+    folder: ''
+    type: file
+    disableDeletion: false
+    updateIntervalSeconds: 30
+    options:
+      path: /var/lib/grafana/dashboards

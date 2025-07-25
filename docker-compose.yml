@@ -48,20 +48,23 @@ services:
 
   grafana:
     image: grafana/grafana:latest
-    container_name: grafana 
+    container_name: grafana
     ports:
-    - "3000:3000"
+      - "3000:3000"
     volumes:
-      # Grafana’s own data store (keep around for persistence)
+      # 1) Grafana’s own DB for dashboards, users, etc.
       - grafana_data:/var/lib/grafana
 
-      # All provisioning config (datasources + dashboards)
-      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+      # 2) Provisioning: datasources (Prometheus)
+      - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources:ro
 
-      # Your JSON dashboards
+      # 3) Provisioning: dashboard providers
+      - ./grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards:ro
+
+      # 4) The actual JSON dashboards to import
       - ./grafana/dashboards:/var/lib/grafana/dashboards:ro
-
-
+    networks:
+      - app-network
   
   cadvisor:
     image: gcr.io/cadvisor/cadvisor:latest
