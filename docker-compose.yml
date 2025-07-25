@@ -47,25 +47,20 @@ services:
 
 
   grafana:
-   image: grafana/grafana:latest
-   container_name: grafana
-   restart: unless-stopped
-   ports:
-    - "3000:3000"
-   networks:
-    - app-network
-   volumes:
-      # données Grafana
+    image: grafana/grafana:latest
+    container_name: grafana 
+    volumes:
+      # Grafana’s own data store (keep around for persistence)
       - grafana_data:/var/lib/grafana
 
-      # provisioning des datasources (si besoin)
-      - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
+      # All provisioning config (datasources + dashboards)
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
 
-      # provisioning des dashboards (fichier YAML)
-      - ./grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards
+      # Your JSON dashboards
+      - ./grafana/dashboards:/var/lib/grafana/dashboards:ro
 
-      # CE QUE L’ON CHANGE : monte tes JSON ici
-      - ./grafana/dashboards:/var/lib/grafana/dashboards
+
+  
   cadvisor:
     image: gcr.io/cadvisor/cadvisor:latest
     container_name: cadvisor
