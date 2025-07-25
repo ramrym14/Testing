@@ -164,14 +164,14 @@ stage('Deploy Report to GitHub Pages') {
 
 
 
-  stage('Show Grafana URL') {
+ stage('Show Grafana URL') {
   steps {
     script {
       echo "🎨 Grafana is available at: http://localhost:3000"
       echo "🔗 You can open it in your browser to explore dashboards."
     }
   }
-}
+ }
 
 
 

@@ -55,10 +55,17 @@ services:
    networks:
     - app-network
    volumes:
-    - grafana_data:/var/lib/grafana
-    - ./grafana/provisioning:/etc/grafana/provisioning
-    - ./grafana/dashboards:/etc/grafana/dashboards
+      # données Grafana
+      - grafana_data:/var/lib/grafana
 
+      # provisioning des datasources (si besoin)
+      - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
+
+      # provisioning des dashboards (fichier YAML)
+      - ./grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards
+
+      # CE QUE L’ON CHANGE : monte tes JSON ici
+      - ./grafana/dashboards:/var/lib/grafana/dashboards
   cadvisor:
     image: gcr.io/cadvisor/cadvisor:latest
     container_name: cadvisor
