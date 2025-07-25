@@ -1,10 +1,10 @@
 FROM mcr.microsoft.com/playwright:next-focal
 WORKDIR /app
 
-# 1) Install just your deps so Docker can cache this layer
+# 1) Install your deps + prom-client + cucumber
 COPY package*.json ./
 RUN npm install --no-audit --no-fund \
- && npm install @cucumber/cucumber --save-dev
+ && npm install @cucumber/cucumber prom-client --save-dev
 
 # 2) Install Playwright browsers
 RUN apt-get update \
@@ -12,11 +12,15 @@ RUN apt-get update \
  && update-ca-certificates \
  && npx playwright install --with-deps chrome
 
-# 3) Copy the rest of your app
+# 3) Copy app + metrics server
 COPY . .
+COPY metrics-server.js .
 
-# 4) **Ensure** the local CLI scripts are executable
+# 4) Make sure CLI scripts are executable
 RUN chmod -R a+x /app/node_modules/.bin
 
-# Default to running Cucumber if you just do `docker run`
-CMD ["npx", "cucumber-js"]
+# 5) Document the metrics port
+EXPOSE 8000
+
+# 6) Start both exporter & tests automatically
+CMD ["sh", "-c", "node metrics-server.js & npx cucumber-js"]
