@@ -1,3 +1,4 @@
+// test_metrics_exporter.js
 const fs = require("fs");
 const path = require("path");
 const express = require("express");
@@ -6,9 +7,10 @@ const client = require("prom-client");
 const app = express();
 const register = client.register;
 
-const passedGauge = new client.Gauge({ name: 'tests_passed', help: 'Passed tests' });
-const failedGauge = new client.Gauge({ name: 'tests_failed', help: 'Failed tests' });
-const skippedGauge = new client.Gauge({ name: 'tests_skipped', help: 'Skipped tests' });
+// Define your gauges
+const passedGauge   = new client.Gauge({ name: 'tests_passed',          help: 'Passed tests' });
+const failedGauge   = new client.Gauge({ name: 'tests_failed',          help: 'Failed tests' });
+const skippedGauge  = new client.Gauge({ name: 'tests_skipped',         help: 'Skipped tests' });
 const durationGauge = new client.Gauge({ name: 'tests_duration_seconds', help: 'Total test duration in seconds' });
 
 function parseCucumberReport() {
@@ -32,22 +34,18 @@ function parseCucumberReport() {
   let passed = 0, failed = 0, skipped = 0, duration = 0;
 
   data.forEach(feature => {
-    if (!feature.uri.includes("Countries/")) return; // 🚩 Filter only Countries
+    if (!feature.uri.includes("Countries/")) return; // only our Countries features
 
     feature.elements?.forEach(scenario => {
       let scenarioFailed = false;
 
       scenario.steps.forEach(step => {
-        if (step.result.status === "failed") scenarioFailed = true;
+        if (step.result.status === "failed")  scenarioFailed = true;
         if (step.result.status === "skipped") skipped++;
-        if (step.result.duration) duration += step.result.duration / 1e9; // ns → s
+        if (step.result.duration)           duration += step.result.duration / 1e9;
       });
 
-      if (scenarioFailed) {
-        failed++;
-      } else {
-        passed++;
-      }
+      scenarioFailed ? failed++ : passed++;
     });
   });
 
@@ -61,12 +59,11 @@ function parseCucumberReport() {
   );
 }
 
-// 🕒 Update metrics every 30s
-setInterval(() => {
-  parseCucumberReport();
-}, 30 * 1000);
+// **Run once immediately**, then every 30 seconds
+parseCucumberReport();
+setInterval(parseCucumberReport, 30 * 1000);
 
-// Expose metrics
+// Expose Prometheus endpoint
 app.get("/metrics", async (req, res) => {
   res.set("Content-Type", register.contentType);
   res.end(await register.metrics());
