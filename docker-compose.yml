@@ -31,7 +31,9 @@ services:
       - 8.8.8.8
       - 8.8.4.4
     working_dir: /app
-    # la commande par défaut est définie dans le Dockerfile (CMD)
+    labels:
+      # 👇 This line is what cAdvisor will expose
+    container_label_com_docker_swarm_service_name: playwright
 
   prometheus:
    image: prom/prometheus:latest
