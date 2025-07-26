@@ -8,6 +8,7 @@ pipeline {
     GIT_REPO = 'git@github.com:ramrym14/Testing.git'
     GIT_BRANCH = 'gh-pages'
     REPORT_DIR = 'report/html'
+     APPLITOOLS_API_KEY = credentials('APPLITOOLS_API_KEY')
   }
 
   stages {
@@ -70,13 +71,13 @@ pipeline {
           echo "👁️ Running visual tests with Applitools..."
 
           sh """
-            docker exec \\
-              -e APPLITOOLS_API_KEY=${APPLITOOLS_API_KEY} \\
-              -w /app \\
-              ${CONTAINER_NAME} \\
-              bash -lc "npx cucumber-js features/Visual/**/*.feature \\
-                --format json:/app/report/applitools-report.json"
-          """
+         docker exec \\
+          -e APPLITOOLS_API_KEY=${APPLITOOLS_API_KEY} \\
+          -w /app \\
+          ${CONTAINER_NAME} \\
+          bash -lc "npx cucumber-js features/Visual/**/*.feature \\
+            --format json:/app/report/applitools-report.json"
+           """
         }
       }
     }
