@@ -31,6 +31,7 @@ pipeline {
 
 stage('Start Container') {
   steps {
+    
     echo "🚀 Starting fresh container…"
     sh """
       docker rm -f ${CONTAINER_NAME} || true
