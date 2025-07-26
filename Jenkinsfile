@@ -47,7 +47,7 @@ stage('Start Container') {
   }
 }
 
-}
+
 
 stage('Run Playwright/Cucumber Tests') {
   steps {
