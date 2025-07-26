@@ -32,7 +32,8 @@ services:
       - 8.8.4.4
     working_dir: /app
     labels:
-      - "com.docker.swarm.service.name=playwright"
+      - "container_name=playwright"
+
 
   prometheus:
    image: prom/prometheus:latest
@@ -87,7 +88,8 @@ services:
       - "--docker_only=true"
       - "--housekeeping_interval=10s"
       - "--store_container_labels=true"
-      - "--whitelisted_container_labels=com.docker.swarm.service.name"
+      - "--whitelisted_container_labels=container_name"
+
 
 
 
