@@ -2,7 +2,7 @@ pipeline {
   agent any
 
   environment {
-    CI             = 'true'   
+    CI = 'true'
     IMAGE_NAME = "test1-playwright"
     CONTAINER_NAME = "playwright"
     GIT_REPO = 'git@github.com:ramrym14/Testing.git'
@@ -11,15 +11,13 @@ pipeline {
   }
 
   stages {
-
     stage('Checkout') {
       steps {
         checkout scm
       }
     }
 
- 
-  stage('Build Docker Image') {
+    stage('Build Docker Image') {
       steps {
         script {
           echo "🔨 Building test image…"
@@ -28,88 +26,74 @@ pipeline {
       }
     }
 
-
-stage('Start Container') {
-  steps {
-
-    echo "🚀 Starting fresh container…"
-    sh """
-      docker rm -f ${CONTAINER_NAME} || true
-      docker run -d \\
-        --name ${CONTAINER_NAME} \\
-        --network app-network \\
-        -e CI=true \\
-        -p 8000:8000 \\
-        --restart unless-stopped \\
-        --label container_name=playwright \\
-        ${IMAGE_NAME}
-    """
-  }
-}
-
-
-
-stage('Run Playwright/Cucumber Tests') {
-  steps {
-    script {
-      // Clean up any old report
-      sh """
-        docker exec ${CONTAINER_NAME} rm -f /app/report/cucumber-report.json || true
-      """
-
-      // Run cucumber-js under bash -lc so it picks up the shebang & PATH correctly
-      sh """
-        docker exec \
-          -w /app \
-          ${CONTAINER_NAME} \
-          bash -lc "npx cucumber-js features/Countries/**/*.feature \
-            --format progress \
-            --format json:/app/report/cucumber-report.json"
-      """
+    stage('Start Container') {
+      steps {
+        echo "🚀 Starting fresh container…"
+        sh """
+          docker rm -f ${CONTAINER_NAME} || true
+          docker run -d \\
+            --name ${CONTAINER_NAME} \\
+            --network app-network \\
+            -e CI=true \\
+            -p 8000:8000 \\
+            --restart unless-stopped \\
+            --label container_name=playwright \\
+            ${IMAGE_NAME}
+        """
+      }
     }
-  }
-}
 
-stage('Start Metrics Exporter') {
-  steps {
-    script {
-      echo "📊 Starting metrics exporter inside container..."
-
-      // Start the exporter process (non-blocking)
-      sh """
-        docker exec -d ${CONTAINER_NAME} bash -c '
-          nohup node /app/test_metrics_exporter.js > /app/exporter.log 2>&1 &
-        '
-      """
-
-      // Wait and check for metrics to be available (retry loop)
-      def success = false
-      for (int i = 0; i < 10; i++) {
-        def result = sh(
-          script: "docker exec ${CONTAINER_NAME} curl -sf http://localhost:8000/metrics || true",
-          returnStdout: true
-        ).trim()
-
-        if (result.contains("tests_passed") || result.contains("tests_failed")) {
-          echo "✅ Exporter is up and responding."
-          success = true
-          break
+    stage('Run Playwright/Cucumber Tests') {
+      steps {
+        script {
+          sh """
+            docker exec ${CONTAINER_NAME} rm -f /app/report/cucumber-report.json || true
+          """
+          sh """
+            docker exec \\
+              -w /app \\
+              ${CONTAINER_NAME} \\
+              bash -lc "npx cucumber-js features/Countries/**/*.feature \\
+                --format progress \\
+                --format json:/app/report/cucumber-report.json"
+          """
         }
-
-        echo "⏳ Waiting for exporter... (${i + 1}/10)"
-        sleep 2
-      }
-
-      if (!success) {
-        error("❌ Exporter failed to start or did not respond with metrics.")
       }
     }
-  }
-}
 
+    stage('Start Metrics Exporter') {
+      steps {
+        script {
+          echo "📊 Starting metrics exporter inside container..."
+          sh """
+            docker exec -d ${CONTAINER_NAME} bash -c '
+              nohup node /app/test_metrics_exporter.js > /app/exporter.log 2>&1 &
+            '
+          """
 
+          def success = false
+          for (int i = 0; i < 10; i++) {
+            def result = sh(
+              script: "docker exec ${CONTAINER_NAME} curl -sf http://localhost:8000/metrics || true",
+              returnStdout: true
+            ).trim()
 
+            if (result.contains("tests_passed") || result.contains("tests_failed")) {
+              echo "✅ Exporter is up and responding."
+              success = true
+              break
+            }
 
+            echo "⏳ Waiting for exporter... (${i + 1}/10)"
+            sleep 2
+          }
+
+          if (!success) {
+            error("❌ Exporter failed to start or did not respond with metrics.")
+          }
+        }
+      }
+    }
 
     stage('Archive Cucumber HTML Report') {
       steps {
@@ -129,33 +113,7 @@ stage('Start Metrics Exporter') {
         ])
       }
     }
-stage('Deploy Report to GitHub Pages') {
-  steps {
-    sshagent(['github_ssh_key']) {
-      script {
-        sh '''
-          mkdir -p ~/.ssh
-          ssh-keyscan github.com >> ~/.ssh/known_hosts
 
-          rm -rf gh-pages-tmp
-          git clone --branch=${GIT_BRANCH} ${GIT_REPO} gh-pages-tmp
-          rm -rf gh-pages-tmp/*
-          cp -r ${REPORT_DIR}/* gh-pages-tmp/
-          cd gh-pages-tmp
-          git config user.name "jenkins"
-          git config user.email "jenkins@example.com"
-          git add .
-          git commit -m "📝 Update test report $(date +'%Y-%m-%d %H:%M:%S')" || echo "No changes to commit"
-          git push origin ${GIT_BRANCH}
-        '''
-      }
-    }
-  }
-}
-
-
-
- // 🚀 New stages
     stage('Check Prometheus') {
       steps {
         script {
@@ -165,18 +123,14 @@ stage('Deploy Report to GitHub Pages') {
       }
     }
 
-
-
- stage('Show Grafana URL') {
-  steps {
-    script {
-      echo "🎨 Grafana is available at: http://localhost:3000"
-      echo "🔗 You can open it in your browser to explore dashboards."
+    stage('Show Grafana URL') {
+      steps {
+        script {
+          echo "🎨 Grafana is available at: http://localhost:3000"
+          echo "🔗 You can open it in your browser to explore dashboards."
+        }
+      }
     }
-  }
- }
-
-
 
     stage('Check cAdvisor') {
       steps {
@@ -187,23 +141,18 @@ stage('Deploy Report to GitHub Pages') {
       }
     }
 
-
-
-   stage('Send Email Notification') {
-  steps {
-    script {
-      emailext(
-        subject: 'BDD Test Results',
-        body: '✅ Playwright BDD tests completed. View the Cucumber HTML report in Jenkins.',
-        to: 'rymaaissa14@gmail.com',
-        from: 'rymaaissa14@gmail.com'
-      )
+    stage('Send Email Notification') {
+      steps {
+        script {
+          emailext(
+            subject: 'BDD Test Results',
+            body: '✅ Playwright BDD tests completed. View the Cucumber HTML report in Jenkins.',
+            to: 'rymaaissa14@gmail.com',
+            from: 'rymaaissa14@gmail.com'
+          )
+        }
+      }
     }
-  }
-}
-
-
-
   }
 
   post {
