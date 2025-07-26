@@ -40,6 +40,7 @@ stage('Start Container') {
         -e CI=true \
         -p 8000:8000 \
         --restart unless-stopped \
+         --label com.docker.swarm.service.name=playwright \
         ${IMAGE_NAME}
     """
   }
