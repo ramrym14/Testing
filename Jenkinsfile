@@ -19,7 +19,7 @@ pipeline {
     }
 
  
-    stage('Build Docker Image') {
+  stage('Build Docker Image') {
       steps {
         script {
           echo "🔨 Building test image…"
@@ -31,7 +31,7 @@ pipeline {
 
 stage('Start Container') {
   steps {
-    
+
     echo "🚀 Starting fresh container…"
     sh """
       docker rm -f ${CONTAINER_NAME} || true
