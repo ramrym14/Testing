@@ -63,7 +63,7 @@ pipeline {
 
     stage('Run Visual Tests with Applitools') {
       environment {
-        APPLITOOLS_API_KEY = credentials('APPLITOOLS_API_KEY')
+        APPLITOOLS_API_KEY = credentials('APPLITOOLS_API_KEY') // Jenkins secret
       }
       steps {
         script {
@@ -74,12 +74,13 @@ pipeline {
               -e APPLITOOLS_API_KEY=${APPLITOOLS_API_KEY} \\
               -w /app \\
               ${CONTAINER_NAME} \\
-              bash -lc "npx cucumber-js features/Visual/**/*.feature \\ 
+              bash -lc "npx cucumber-js features/Visual/**/*.feature \\
                 --format json:/app/report/applitools-report.json"
           """
         }
       }
     }
+
   
     stage('Start Metrics Exporter') {
       steps {
