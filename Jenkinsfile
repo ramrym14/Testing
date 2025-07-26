@@ -8,7 +8,7 @@ pipeline {
     GIT_REPO = 'git@github.com:ramrym14/Testing.git'
     GIT_BRANCH = 'gh-pages'
     REPORT_DIR = 'report/html'
-     APPLITOOLS_API_KEY = credentials('APPLITOOLS_API_KEY')
+    
   }
 
   stages {
@@ -63,16 +63,13 @@ pipeline {
     }
 
    stage('Run Visual Tests with Applitools') {
-  environment {
-    APPLITOOLS_API_KEY = credentials('APPLITOOLS_API_KEY') // Jenkins secret
-  }
-  steps {
-    script {
+     steps {
+       script {
       echo "👁️ Running visual tests with Applitools..."
       // Show the Applitools dashboard link (replace YOUR_ACCOUNT_ID with yours)
       echo "🔗 View Applitools Dashboard at:"
       echo "   https://eyes.applitools.com/app/dashboard?accountId=MXH7_s3FH0W29qcbrAxRQA__"
-    }
+        }
   }
 }
 
