@@ -68,7 +68,7 @@ pipeline {
       echo "👁️ Running visual tests with Applitools..."
       // Show the Applitools dashboard link (replace YOUR_ACCOUNT_ID with yours)
       echo "🔗 View Applitools Dashboard at:"
-      echo "   https://eyes.applitools.com/app/dashboard?accountId=MXH7_s3FH0W29qcbrAxRQA__"
+      echo "   https://eyes.applitools.com"
         }
   }
 }
