@@ -39,16 +39,28 @@
         }
       ]
     },
+   {
+  "type": "stat",
+  "title": "🧠 Docker RAM (MB)",
+  "gridPos": { "x": 6, "y": 3, "w": 6, "h": 3 },
+  "targets": [
     {
-      "type": "stat",
-      "title": "🧠 Playwright RAM (MB)",
-      "gridPos": { "x": 6, "y": 3, "w": 6, "h": 3 },
-      "targets": [
-        {
-          "expr": "container_memory_usage_bytes{container_label_com_docker_swarm_service_name=\"playwrights\"} / 1024 / 1024",
-          "refId": "D"
-        }
-      ]
+      "expr": "sum(container_memory_usage_bytes{image!=\"\", container!=\"\"}) / 1024 / 1024",
+      "refId": "A"
     }
+  ],
+  "options": {
+    "reduceOptions": {
+      "calcs": ["lastNotNull"],
+      "fields": "",
+      "values": false
+    },
+    "textMode": "value",
+    "colorMode": "value",
+    "graphMode": "none",
+    "justifyMode": "auto"
+  }
+}
+
   ]
 }
