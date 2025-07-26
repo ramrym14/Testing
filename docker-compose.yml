@@ -32,8 +32,7 @@ services:
       - 8.8.4.4
     working_dir: /app
     labels:
-      # 👇 This line is what cAdvisor will expose
-    container_label_com_docker_swarm_service_name: playwright
+      - "com.docker.swarm.service.name=playwright"
 
   prometheus:
    image: prom/prometheus:latest
