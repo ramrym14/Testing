@@ -34,17 +34,18 @@ stage('Start Container') {
     echo "🚀 Starting fresh container…"
     sh """
       docker rm -f ${CONTAINER_NAME} || true
-      docker run -d \
-        --name ${CONTAINER_NAME} \
-        --network app-network \
-        -e CI=true \
-        -p 8000:8000 \
-        --restart unless-stopped \
-        --label container_name=playwright \
-
+      docker run -d \\
+        --name ${CONTAINER_NAME} \\
+        --network app-network \\
+        -e CI=true \\
+        -p 8000:8000 \\
+        --restart unless-stopped \\
+        --label container_name=playwright \\
         ${IMAGE_NAME}
     """
   }
+}
+
 }
 
 stage('Run Playwright/Cucumber Tests') {
