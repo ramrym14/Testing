@@ -22,7 +22,6 @@ After(async function () {
   }
 });
 
-
 Then('I should see the {string} button', async function (buttonText) {
   const isVisible = await this.deliveryAddPage.isAddButtonVisible();
   if (!isVisible) throw new Error(`❌ ${buttonText} button is not visible but it should be.`);

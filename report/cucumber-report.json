@@ -14,7 +14,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 2174560600
+              "duration": 1558523099
             }
           },
           {
@@ -22,7 +22,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 1065234000
+              "duration": 1023825799
             }
           },
           {
@@ -30,7 +30,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 135526499
+              "duration": 145072500
             }
           },
           {
@@ -38,7 +38,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 132570799
+              "duration": 133374600
             }
           },
           {
@@ -51,7 +51,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 839183998
+              "duration": 906971998
             }
           },
           {
@@ -64,7 +64,7 @@
             },
             "result": {
               "status": "failed",
-              "duration": 87970275499,
+              "duration": 87298436600,
               "error_message": "page.click: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('a.profile-button')\u001b[22m\n\n    at DeliveryPage.clickUserIcon (C:\\Users\\YOGA X380\\Desktop\\test1\\pages\\Tunisia\\DeliveryPage.js:39:21)\n    at DeliveryAddButtonPage.goToDeliveryAddressSection (C:\\Users\\YOGA X380\\Desktop\\test1\\pages\\Countries\\AddDeliveryAddressPage.js:45:27)\n    at async World.<anonymous> (C:\\Users\\YOGA X380\\Desktop\\test1\\steps\\Countries\\authAndNavigationSteps.js:16:3)"
             }
           },
@@ -200,7 +200,7 @@
             "hidden": true,
             "result": {
               "status": "failed",
-              "duration": 3950100,
+              "duration": 4179100,
               "error_message": "TypeError: open is not a function\n    at Server.<anonymous> (C:\\Users\\YOGA X380\\Desktop\\test1\\serve-failure-popup.js:52:5)\n    at Server.f (C:\\Users\\YOGA X380\\Desktop\\test1\\node_modules\\once\\once.js:25:25)\n    at Object.onceWrapper (node:events:632:28)\n    at Server.emit (node:events:530:35)\n    at Server.emit (node:domain:489:12)\n    at emitListeningNT (node:net:1950:10)\n    at process.processTicksAndRejections (node:internal/process/task_queues:89:21)"
             }
           },
@@ -209,7 +209,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 6612099
+              "duration": 8911999
             }
           },
           {
@@ -217,7 +217,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 3096600
+              "duration": 2439099
             }
           },
           {
@@ -225,7 +225,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 800167300
+              "duration": 818882600
             }
           }
         ],

@@ -1,8 +1,8 @@
 {
-  "type": "Timeout",
+  "type": "DataError",
   "explanation": [
-    "The test execution timed out while waiting for the locator 'a.profile-button'.",
-    "The UX does not show any error related to a timeout, but the error log indicates that the page did not respond within the specified time limit.",
-    "Check if there is a delay in loading the profile button or adjust the timeout value in the test script accordingly."
+    "The test failed due to incorrect credentials being entered.",
+    "The UX message 'Incorrect credentials, please try again!' correlates with the issue in the frontend. The error log also indicates a timeout which suggests that the login process could not be completed due to incorrect data.",
+    "To resolve this issue, ensure the correct username and password are being entered before proceeding with the test."
   ]
 }

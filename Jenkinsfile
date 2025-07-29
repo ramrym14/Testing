@@ -66,7 +66,7 @@ pipeline {
      steps {
        script {
       echo "👁️ Running visual tests with Applitools..."
-      // Show the Applitools dashboard link (replace YOUR_ACCOUNT_ID with yours)
+     
       echo "🔗 View Applitools Dashboard at:"
       echo "   https://eyes.applitools.com"
         }
@@ -84,24 +84,20 @@ pipeline {
               nohup node /app/test_metrics_exporter.js > /app/exporter.log 2>&1 &
             '
           """
-
           def success = false
           for (int i = 0; i < 10; i++) {
             def result = sh(
               script: "docker exec ${CONTAINER_NAME} curl -sf http://localhost:8000/metrics || true",
               returnStdout: true
             ).trim()
-
             if (result.contains("tests_passed") || result.contains("tests_failed")) {
               echo "✅ Exporter is up and responding."
               success = true
               break
             }
-
             echo "⏳ Waiting for exporter... (${i + 1}/10)"
             sleep 2
           }
-
           if (!success) {
             error("❌ Exporter failed to start or did not respond with metrics.")
           }
