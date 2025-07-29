@@ -1,6 +1,8 @@
 // 📦 Native HTTP for local Ollama API (no axios needed)
 const http = require('http');
 const fs = require('fs');
+const path = require('path');
+const { serveFailurePopup } = require('./../serve-failure-popup');
 
 // 🧠 Function to analyze and classify test failure using Ollama locally
 module.exports.analyzeFailureWithAI = async function (errorLog, context = {}) {
@@ -17,10 +19,10 @@ module.exports.analyzeFailureWithAI = async function (errorLog, context = {}) {
     expectedBehavior = 'Not specified',
     uxText = 'No visible UI message detected.',
     domSnapshot = 'No DOM context provided.',
-      screenshotPath = ''
+    screenshotPath = ''
   } = context;
 
-  const prompt = `You are an expert QA analyst. Your task is to analyze Playwright test failures using backend logs, frontend UX messages, and the DOM. If the UX shows a login error like \'Incorrect credentials\' and the error log shows a timeout, classify as type: DataError and keep all timeout-related explanation.
+  const prompt = `You are an expert QA analyst. Your task is to analyze Playwright test failures using backend logs, frontend UX messages, and the DOM. If the UX shows a login error like 'Incorrect credentials' and the error log shows a timeout, classify as type: DataError and keep all timeout-related explanation.
 
 Respond in strict JSON:
 {
@@ -53,12 +55,25 @@ ${errorLog}`;
 
     const parsed = JSON.parse(result);
 
+    const explanationText = Array.isArray(parsed.explanation)
+      ? parsed.explanation.join('\n- ')
+      : parsed.explanation?.trim() || result.trim();
+
+    // ✅ Show popup HTML page if classification is not generic
+    if (parsed.type && parsed.type !== 'Other') {
+      serveFailurePopup({
+        testName,
+        type: parsed.type,
+        explanation: explanationText,
+        screenshotPath
+      });
+    }
+
     return {
       type: parsed.type?.trim() || 'Unclassified',
-      explanation: Array.isArray(parsed.explanation)
-        ? parsed.explanation.join('\n- ')
-        : parsed.explanation?.trim() || result.trim()
+      explanation: explanationText
     };
+
   } catch (err) {
     return {
       type: 'OllamaError',
