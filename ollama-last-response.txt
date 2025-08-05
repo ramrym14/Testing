@@ -1,8 +1,8 @@
 {
   "type": "DataError",
   "explanation": [
-    "The test failed due to incorrect credentials being entered.",
-    "The UX message 'Incorrect credentials, please try again!' correlates with the issue in the frontend. The error log also indicates a timeout which suggests that the login process could not be completed due to incorrect data.",
-    "To resolve this issue, ensure the correct username and password are being entered before proceeding with the test."
+    "The test failed due to incorrect login credentials.",
+    "The frontend UX displayed an 'Incorrect credentials' error, which correlates with the UI message. The backend log also shows a timeout, but it appears this is related to locating the user icon (a.profile-button) rather than the login attempt itself.",
+    "Ensure that the correct username and password are being provided during login. Also, investigate if there's any issue in the locator strategy for the user icon."
   ]
 }

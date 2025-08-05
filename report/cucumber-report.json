@@ -14,7 +14,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 1558523099
+              "duration": 1697271800
             }
           },
           {
@@ -22,7 +22,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 1023825799
+              "duration": 1042902000
             }
           },
           {
@@ -30,7 +30,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 145072500
+              "duration": 134261499
             }
           },
           {
@@ -38,7 +38,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 133374600
+              "duration": 137907000
             }
           },
           {
@@ -51,7 +51,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 906971998
+              "duration": 780117098
             }
           },
           {
@@ -64,7 +64,7 @@
             },
             "result": {
               "status": "failed",
-              "duration": 87298436600,
+              "duration": 68095980599,
               "error_message": "page.click: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('a.profile-button')\u001b[22m\n\n    at DeliveryPage.clickUserIcon (C:\\Users\\YOGA X380\\Desktop\\test1\\pages\\Tunisia\\DeliveryPage.js:39:21)\n    at DeliveryAddButtonPage.goToDeliveryAddressSection (C:\\Users\\YOGA X380\\Desktop\\test1\\pages\\Countries\\AddDeliveryAddressPage.js:45:27)\n    at async World.<anonymous> (C:\\Users\\YOGA X380\\Desktop\\test1\\steps\\Countries\\authAndNavigationSteps.js:16:3)"
             }
           },
@@ -74,7 +74,7 @@
             "line": 7,
             "name": "I select \"\"",
             "match": {
-              "location": "steps\\Countries\\addAddressSteps.js:32"
+              "location": "steps\\Countries\\addAddressSteps.js:31"
             },
             "result": {
               "status": "skipped",
@@ -87,7 +87,7 @@
             "line": 8,
             "name": "the \"ADD\" button should be visible",
             "match": {
-              "location": "steps\\Countries\\addAddressSteps.js:37"
+              "location": "steps\\Countries\\addAddressSteps.js:36"
             },
             "result": {
               "status": "skipped",
@@ -100,7 +100,7 @@
             "line": 9,
             "name": "the \"ADD\" button should be enabled",
             "match": {
-              "location": "steps\\Countries\\addAddressSteps.js:45"
+              "location": "steps\\Countries\\addAddressSteps.js:44"
             },
             "result": {
               "status": "skipped",
@@ -113,7 +113,7 @@
             "line": 10,
             "name": "I click on the \"ADD\" button",
             "match": {
-              "location": "steps\\Countries\\addAddressSteps.js:53"
+              "location": "steps\\Countries\\addAddressSteps.js:52"
             },
             "result": {
               "status": "skipped",
@@ -126,7 +126,7 @@
             "line": 11,
             "name": "the Add Address modal should be open",
             "match": {
-              "location": "steps\\Countries\\addAddressSteps.js:58"
+              "location": "steps\\Countries\\addAddressSteps.js:57"
             },
             "result": {
               "status": "skipped",
@@ -139,7 +139,7 @@
             "line": 12,
             "name": "I fill the Add Address form with \"validData\"",
             "match": {
-              "location": "steps\\Countries\\addAddressSteps.js:67"
+              "location": "steps\\Countries\\addAddressSteps.js:66"
             },
             "result": {
               "status": "skipped",
@@ -152,7 +152,7 @@
             "line": 13,
             "name": "I click on \"REGISTER\"",
             "match": {
-              "location": "steps\\Countries\\addAddressSteps.js:76"
+              "location": "steps\\Countries\\addAddressSteps.js:75"
             },
             "result": {
               "status": "skipped",
@@ -165,7 +165,7 @@
             "line": 14,
             "name": "the address should be \"success\"",
             "match": {
-              "location": "steps\\Countries\\addAddressSteps.js:85"
+              "location": "steps\\Countries\\addAddressSteps.js:84"
             },
             "result": {
               "status": "skipped",
@@ -188,7 +188,7 @@
             "line": 15,
             "name": "I should see the messages:",
             "match": {
-              "location": "steps\\Countries\\addAddressSteps.js:139"
+              "location": "steps\\Countries\\addAddressSteps.js:138"
             },
             "result": {
               "status": "skipped",
@@ -199,9 +199,8 @@
             "keyword": "After",
             "hidden": true,
             "result": {
-              "status": "failed",
-              "duration": 4179100,
-              "error_message": "TypeError: open is not a function\n    at Server.<anonymous> (C:\\Users\\YOGA X380\\Desktop\\test1\\serve-failure-popup.js:52:5)\n    at Server.f (C:\\Users\\YOGA X380\\Desktop\\test1\\node_modules\\once\\once.js:25:25)\n    at Object.onceWrapper (node:events:632:28)\n    at Server.emit (node:events:530:35)\n    at Server.emit (node:domain:489:12)\n    at emitListeningNT (node:net:1950:10)\n    at process.processTicksAndRejections (node:internal/process/task_queues:89:21)"
+              "status": "passed",
+              "duration": 754325700
             }
           },
           {
@@ -209,7 +208,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 8911999
+              "duration": 1702199
             }
           },
           {
@@ -217,7 +216,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 2439099
+              "duration": 1090899
             }
           },
           {
@@ -225,7 +224,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 818882600
+              "duration": 502086400
             }
           }
         ],

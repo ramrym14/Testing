@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>AI Feature Generator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #111;
+      color: #eee;
+      padding: 20px;
+    }
+    h1 { color: #4cafef; }
+    textarea, input {
+      width: 100%;
+      margin-bottom: 10px;
+      padding: 10px;
+      border-radius: 5px;
+      border: none;
+    }
+    textarea {
+      height: 200px;
+      resize: none;
+    }
+    button {
+      background: #4cafef;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      cursor: pointer;
+      border-radius: 5px;
+      font-size: 16px;
+    }
+    button:hover {
+      background: #3b9bd9;
+    }
+    #result {
+      margin-top: 15px;
+      color: #ffd166;
+    }
+  </style>
+</head>
+<body>
+  <h1>📝 AI Feature File Generator</h1>
+  <label>Feature Description:</label>
+  <textarea id="requirement" placeholder="Describe your feature here..."></textarea>
+  
+  <label>Output File Name:</label>
+  <input type="text" id="filename" value="generated.feature">
+  
+  <button id="generateBtn">Generate Feature File</button>
+
+  <div id="result"></div>
+
+  <script>
+    document.getElementById('generateBtn').addEventListener('click', async () => {
+      const requirement = document.getElementById('requirement').value;
+      const filename = document.getElementById('filename').value;
+
+      const res = await fetch('/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ requirement, filename })
+      });
+
+      const data = await res.json();
+      document.getElementById('result').innerText = data.message;
+    });
+  </script>
+</body>
+</html>

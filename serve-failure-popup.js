@@ -1,7 +1,8 @@
 // serve-failure-popup.js
 const express = require('express');
 const fs = require('fs');
-const open = require('openurl');
+const openurl = require('openurl');
+
 
 const path = require('path');
 
@@ -49,7 +50,8 @@ function serveFailurePopup(data) {
 
   app.listen(port, () => {
     console.log(`🌐 AI failure popup running at http://localhost:${port}`);
-    open(`http://localhost:${port}`);
+    openurl.open(`http://localhost:${port}`);
+
   });
 }
 
