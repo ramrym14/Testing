@@ -28,7 +28,7 @@ Include the following countries and credentials:
 - Libya: username "LYAC304976"
 - Saudi Arabia: username "YE09986352"
 - Oman: username "OM17905937"
- , just put code without comment ` ;
+ , just put code without comments just pure gherkin language` ;
 
 
 const outputFile = 'LOGIN.feature';
