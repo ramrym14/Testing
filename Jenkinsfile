@@ -111,18 +111,7 @@ pipeline {
       }
     }
 
-    stage('Publish Cucumber HTML Report') {
-      steps {
-        publishHTML(target: [
-          reportName: 'Cucumber HTML Report',
-          reportDir: 'report/html',
-          reportFiles: 'index.html',
-          keepAll: true,
-          alwaysLinkToLastBuild: true,
-          allowMissing: false
-        ])
-      }
-    }
+   
 
     stage('Check Prometheus') {
       steps {
