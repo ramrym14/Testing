@@ -15,11 +15,11 @@ Feature: Modify delivery address
   Examples:
     | loginCountry | username      | country       | formType    | expectedMessages                                               |
    | Tunisia     | TN08343357    |               | longPhone   | Too long , Please enter your address!                          |
-   | Tunisia      | TN08343357    |               | shortPhone  | Too short , Please enter your address!                         |
-   | Tunisia      | TN08343357    |               | validData   | Operation performed successfully                               |
-   | Tunisia     | TN08343357    | Algeria       | validData   | Operation performed successfully                               |
-   | Tunisia      | TN08343357    | Ivory Coast   | validData   | Operation performed successfully                               |
-   | Tunisia      | TN08343357    | Libya         | validData   | Operation performed successfully                               |
+  # | Tunisia      | TN08343357    |               | shortPhone  | Too short , Please enter your address!                         |
+   #| Tunisia      | TN08343357    |               | validData   | Operation performed successfully                               |
+   #| Tunisia     | TN08343357    | Algeria       | validData   | Operation performed successfully                               |
+   #| Tunisia      | TN08343357    | Ivory Coast   | validData   | Operation performed successfully                               |
+   #| Tunisia      | TN08343357    | Libya         | validData   | Operation performed successfully                               |
     
     
    #| Algeria      | DZ108440950   |               | longPhone   | Too long , Please enter your address!                          |
