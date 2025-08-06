@@ -136,34 +136,35 @@ pipeline {
       }
     }
 
-    stage('Send Email Notification') {
-      steps {
-        script {
-          // Extract Cucumber report link from log inside the container
-          def cucumberLink = sh(
-            script: "docker exec ${CONTAINER_NAME} grep -o 'https://reports.cucumber.io[^ ]*' /app/${CUCUMBER_LOG} || true",
-            returnStdout: true
-          ).trim()
+ stage('Send Email Notification') {
+  steps {
+    script {
+      // Extract Cucumber report link from log inside the container
+      def cucumberLink = sh(
+        script: "docker exec ${CONTAINER_NAME} grep -o 'https://reports.cucumber.io[^ ]*' /app/${CUCUMBER_LOG} || true",
+        returnStdout: true
+      ).trim()
 
-          if (!cucumberLink) {
-            cucumberLink = "⚠️ No Cucumber report link found."
-          }
+      if (!cucumberLink) {
+        cucumberLink = "⚠️ No Cucumber report link found."
+      }
 
-          emailext(
-            subject: 'BDD Test Results',
-            body: """✅ Playwright BDD tests completed.  
+      emailext(
+        subject: 'BDD Test Results',
+        body: """✅ Playwright BDD tests completed.  
 📄 View the Cucumber HTML report in Jenkins.  
 
 🔗 Online Cucumber Report (valid 24h):  
 ${cucumberLink}
-            """,
-            to: 'rymaaissa14@gmail.com',
-            from: 'rymaaissa14@gmail.com',
-            attachmentsPattern: 'report/html/index.html'
-          )
-        }
-      }
+        """,
+        to: 'rymaaissa14@gmail.com',
+        from: 'rymaaissa14@gmail.com',
+        attachmentsPattern: 'report/html/index.html'
+      )
     }
+  }
+}
+
   }
 
   post {
