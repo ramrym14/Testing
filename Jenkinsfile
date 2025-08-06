@@ -141,17 +141,25 @@ pipeline {
     }
 
     stage('Send Email Notification') {
-      steps {
-        script {
-          emailext(
-            subject: 'BDD Test Results',
-            body: '✅ Playwright BDD tests completed. View the Cucumber HTML report in Jenkins.',
-            to: 'rymaaissa14@gmail.com',
-            from: 'rymaaissa14@gmail.com'
-          )
-        }
-      }
+  steps {
+    script {
+      emailext(
+        subject: 'BDD Test Results',
+        body: """
+          ✅ Playwright BDD tests completed.<br><br>
+          📄 <b>View Cucumber HTML report in Jenkins.</b><br>
+          📊 <b>View Pass vs Fail Chart in Grafana:</b> 
+          <a href="http://localhost:3000/d/bdd-tests/bdd-test-dashboard?orgId=1&from=2025-08-05T20:38:12.796Z&to=2025-08-06T02:38:12.796Z&timezone=browser&refresh=30s&viewPanel=panel-5">
+            Open Grafana Panel
+          </a>
+        """,
+        mimeType: 'text/html',
+        to: 'rymaaissa14@gmail.com',
+        from: 'rymaaissa14@gmail.com'
+      )
     }
+  }
+}
     
   }
 
