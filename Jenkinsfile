@@ -147,11 +147,13 @@ pipeline {
             subject: 'BDD Test Results',
             body: '✅ Playwright BDD tests completed. View the Cucumber HTML report in Jenkins.',
             to: 'rymaaissa14@gmail.com',
-            from: 'rymaaissa14@gmail.com'
+            from: 'rymaaissa14@gmail.com',
+            attachmentsPattern: 'report/html/index.html'
           )
         }
       }
     }
+    
   }
 
   post {
