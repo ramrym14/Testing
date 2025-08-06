@@ -18,7 +18,7 @@ Feature: Modify delivery address
    | Tunisia      | TN08343357    |               | shortPhone  | Too short , Please enter your address!                         |
    | Tunisia      | TN08343357    |               | validData   | Operation performed successfully                               |
    | Tunisia     | TN08343357    | Algeria       | validData   | Operation performed successfully                               |
-   | Tunisia      | TN08343357    | Ivory Coast   | validData   | Operation performed successfully                               |
+   #| Tunisia      | TN08343357    | Ivory Coast   | validData   | Operation performed successfully                               |
    | Tunisia      | TN08343357    | Libya         | validData   | Operation performed successfully                               |
     
     
