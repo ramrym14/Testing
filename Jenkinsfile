@@ -140,14 +140,9 @@ pipeline {
       }
     }
 
-  stage('Send Email Notification') {
+    stage('Send Email Notification') {
   steps {
     script {
-      // Download the Grafana pie chart PNG
-      sh """
-        curl -s -o piechart.png "http://grafana:3000/render/d-solo/bdd-tests/BDD-Test-Dashboard?orgId=1&panelId=5&width=800&height=400&tz=UTC"
-      """
-
       emailext(
         subject: 'BDD Test Results',
         body: """
@@ -156,19 +151,14 @@ pipeline {
           <a href="http://localhost:3000/d/bdd-tests/bdd-test-dashboard?orgId=1&from=2025-08-05T20:38:12.796Z&to=2025-08-06T02:38:12.796Z&timezone=browser&refresh=30s&viewPanel=panel-5">
             Open Grafana Panel
           </a>
-          <br><br>
-          <b>Embedded Pie Chart:</b><br>
-          <img src="cid:piechart.png">
         """,
         mimeType: 'text/html',
         to: 'rymaaissa14@gmail.com',
-        from: 'rymaaissa14@gmail.com',
-        attachmentsPattern: 'piechart.png'
+        from: 'rymaaissa14@gmail.com'
       )
     }
   }
 }
-
     
   }
 
