@@ -8,7 +8,7 @@ pipeline {
     GIT_REPO = 'git@github.com:ramrym14/Testing.git'
     GIT_BRANCH = 'gh-pages'
     REPORT_DIR = 'report/html'
-    
+    CUCUMBER_LOG = 'report/cucumber-report.log'
   }
 
   stages {
@@ -50,31 +50,29 @@ pipeline {
           sh """
             docker exec ${CONTAINER_NAME} rm -f /app/report/cucumber-report.json || true
           """
+          // Run cucumber and tee output to a log for parsing the link
           sh """
             docker exec \\
               -w /app \\
               ${CONTAINER_NAME} \\
               bash -lc "npx cucumber-js features/Countries/**/*.feature \\
                 --format progress \\
-                --format json:/app/report/cucumber-report.json"
+                --format json:/app/report/cucumber-report.json | tee /app/${CUCUMBER_LOG}"
           """
         }
       }
     }
 
-   stage('Run Visual Tests with Applitools') {
-     steps {
-       script {
-      echo "👁️ Running visual tests with Applitools..."
-     
-      echo "🔗 View Applitools Dashboard at:"
-      echo "   https://eyes.applitools.com"
+    stage('Run Visual Tests with Applitools') {
+      steps {
+        script {
+          echo "👁️ Running visual tests with Applitools..."
+          echo "🔗 View Applitools Dashboard at:"
+          echo "   https://eyes.applitools.com"
         }
-  }
-}
+      }
+    }
 
-
-  
     stage('Start Metrics Exporter') {
       steps {
         script {
@@ -111,8 +109,6 @@ pipeline {
       }
     }
 
-   
-
     stage('Check Prometheus') {
       steps {
         script {
@@ -143,9 +139,24 @@ pipeline {
     stage('Send Email Notification') {
       steps {
         script {
+          // Extract Cucumber report link from log inside the container
+          def cucumberLink = sh(
+            script: "docker exec ${CONTAINER_NAME} grep -o 'https://reports.cucumber.io[^ ]*' /app/${CUCUMBER_LOG} || true",
+            returnStdout: true
+          ).trim()
+
+          if (!cucumberLink) {
+            cucumberLink = "⚠️ No Cucumber report link found."
+          }
+
           emailext(
             subject: 'BDD Test Results',
-            body: '✅ Playwright BDD tests completed. View the Cucumber HTML report in Jenkins.',
+            body: """✅ Playwright BDD tests completed.  
+📄 View the Cucumber HTML report in Jenkins.  
+
+🔗 Online Cucumber Report (valid 24h):  
+${cucumberLink}
+            """,
             to: 'rymaaissa14@gmail.com',
             from: 'rymaaissa14@gmail.com',
             attachmentsPattern: 'report/html/index.html'
@@ -153,7 +164,6 @@ pipeline {
         }
       }
     }
-    
   }
 
   post {
