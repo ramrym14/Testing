@@ -22,7 +22,7 @@ Feature: Delivery address behavior based on selected country
   | Tunisia      | TN08343357   |                 | be         | be      | be         | validData   | success        | Operation performed successfully                      |
   | Tunisia      | TN08343357   |                 | be         | be      | be         | shortPhone  | error          | Too short , Please enter your address!                |
   | Tunisia      | TN08343357   |                 | be         | be      | be         | longPhone   | error          | Too long , Please enter your address!                 |
-  | Tunisia      | TN08343357   | Algeria         | be         | not     | not        | valid       | skipped        |                                                       |
+  | Tunisia      | TN08343357   | Libya         | be         | not     | not        | valid       | skipped        |                                                       |
 
 
   #| Algeria     | DZ108440950   |                 | be         | be      | be         | validData   | success        | Operation performed successfully                      |
