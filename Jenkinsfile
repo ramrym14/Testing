@@ -8,7 +8,7 @@ pipeline {
     GIT_REPO = 'git@github.com:ramrym14/Testing.git'
     GIT_BRANCH = 'gh-pages'
     REPORT_DIR = 'report/html'
-    
+    CUCUMBER_REPORT_LINK = '' // will hold extracted link
   }
 
   stages {
@@ -39,7 +39,7 @@ pipeline {
             -p 8000:8000 \\
             --restart unless-stopped \\
             --label container_name=playwright \\
-            ${IMAGE_NAME}
+            ${IMAGE_NAME} tail -f /dev/null
         """
       }
     }
@@ -47,34 +47,40 @@ pipeline {
     stage('Run Playwright/Cucumber Tests') {
       steps {
         script {
-          sh """
-            docker exec ${CONTAINER_NAME} rm -f /app/report/cucumber-report.json || true
-          """
+          // Run tests & save output so we can extract report link
           sh """
             docker exec \\
               -w /app \\
               ${CONTAINER_NAME} \\
               bash -lc "npx cucumber-js features/Countries/**/*.feature \\
                 --format progress \\
-                --format json:/app/report/cucumber-report.json"
+                --publish > cucumber_output.txt"
           """
+
+          // Copy output file from container to Jenkins workspace
+          sh "docker cp ${CONTAINER_NAME}:/app/cucumber_output.txt ."
+
+          // Extract public Cucumber report link
+          def link = sh(
+            script: "grep -o 'https://reports.cucumber.io/reports/[a-zA-Z0-9-]*' cucumber_output.txt | tail -n 1",
+            returnStdout: true
+          ).trim()
+
+          env.CUCUMBER_REPORT_LINK = link
+          echo "📄 Found Cucumber report link: ${link}"
         }
       }
     }
 
-   stage('Run Visual Tests with Applitools') {
-     steps {
-       script {
-      echo "👁️ Running visual tests with Applitools..."
-     
-      echo "🔗 View Applitools Dashboard at:"
-      echo "   https://eyes.applitools.com"
+    stage('Run Visual Tests with Applitools') {
+      steps {
+        script {
+          echo "👁️ Running visual tests with Applitools..."
+          echo "🔗 View Applitools Dashboard at: https://eyes.applitools.com"
         }
-  }
-}
+      }
+    }
 
-
-  
     stage('Start Metrics Exporter') {
       steps {
         script {
@@ -84,23 +90,6 @@ pipeline {
               nohup node /app/test_metrics_exporter.js > /app/exporter.log 2>&1 &
             '
           """
-          def success = false
-          for (int i = 0; i < 10; i++) {
-            def result = sh(
-              script: "docker exec ${CONTAINER_NAME} curl -sf http://localhost:8000/metrics || true",
-              returnStdout: true
-            ).trim()
-            if (result.contains("tests_passed") || result.contains("tests_failed")) {
-              echo "✅ Exporter is up and responding."
-              success = true
-              break
-            }
-            echo "⏳ Waiting for exporter... (${i + 1}/10)"
-            sleep 2
-          }
-          if (!success) {
-            error("❌ Exporter failed to start or did not respond with metrics.")
-          }
         }
       }
     }
@@ -111,49 +100,24 @@ pipeline {
       }
     }
 
-   
-
-    stage('Check Prometheus') {
-      steps {
-        script {
-          echo "🔎 Checking Prometheus..."
-          sh "curl -s http://prometheus:9090/-/ready || echo '⚠️ Prometheus not reachable'"
-        }
-      }
-    }
-
-    stage('Show Grafana URL') {
-      steps {
-        script {
-          echo "🎨 Grafana is available at: http://localhost:3000"
-          echo "🔗 You can open it in your browser to explore dashboards."
-        }
-      }
-    }
-
-    stage('Check cAdvisor') {
-      steps {
-        script {
-          echo "🔎 Checking cAdvisor..."
-          sh "curl -s http://cadvisor:8080/ || echo '⚠️ cAdvisor not reachable'"
-        }
-      }
-    }
-
     stage('Send Email Notification') {
       steps {
         script {
           emailext(
             subject: 'BDD Test Results',
-            body: '✅ Playwright BDD tests completed. View the Cucumber HTML report in Jenkins.',
+            body: """
+              <p>✅ Playwright BDD tests completed successfully.</p>
+              <p><b>View Cucumber Public HTML Report:</b> 
+              <a href="${env.CUCUMBER_REPORT_LINK}">${env.CUCUMBER_REPORT_LINK}</a></p>
+              <p>Regards,<br>Jenkins</p>
+            """,
+            mimeType: 'text/html',
             to: 'rymaaissa14@gmail.com',
-            from: 'rymaaissa14@gmail.com',
-           attachmentsPattern: 'reports/index.html'
+            from: 'rymaaissa14@gmail.com'
           )
         }
       }
     }
-    
   }
 
   post {
