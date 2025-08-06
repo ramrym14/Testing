@@ -8,9 +8,7 @@ pipeline {
     GIT_REPO = 'git@github.com:ramrym14/Testing.git'
     GIT_BRANCH = 'gh-pages'
     REPORT_DIR = 'report/html'
-    CUCUMBER_REPORT_LINK = ''
-    GRAFANA_URL = 'http://grafana:3000' // Change to LAN IP or domain if needed
-    GRAFANA_PANEL_ID = '5' // Panel ID for 📊 Pass vs Fail
+    
   }
 
   stages {
@@ -41,7 +39,7 @@ pipeline {
             -p 8000:8000 \\
             --restart unless-stopped \\
             --label container_name=playwright \\
-            ${IMAGE_NAME} tail -f /dev/null
+            ${IMAGE_NAME}
         """
       }
     }
@@ -49,37 +47,34 @@ pipeline {
     stage('Run Playwright/Cucumber Tests') {
       steps {
         script {
-          // Run tests inside container and capture stdout+stderr
           sh """
-            docker exec -w /app ${CONTAINER_NAME} bash -lc "npx cucumber-js features/Countries/**/*.feature \\
-              --format progress \\
-              --publish-all > cucumber_output.txt 2>&1"
+            docker exec ${CONTAINER_NAME} rm -f /app/report/cucumber-report.json || true
           """
-
-          // Copy the captured output from container to Jenkins
-          sh "docker cp ${CONTAINER_NAME}:/app/cucumber_output.txt ."
-
-          // Extract the public Cucumber report link
-          def link = sh(
-            script: "grep -o 'https://reports.cucumber.io/reports/[a-zA-Z0-9-]*' cucumber_output.txt | tail -n 1",
-            returnStdout: true
-          ).trim()
-
-          env.CUCUMBER_REPORT_LINK = link
-          echo "📄 Found Cucumber report link: ${link}"
+          sh """
+            docker exec \\
+              -w /app \\
+              ${CONTAINER_NAME} \\
+              bash -lc "npx cucumber-js features/Countries/**/*.feature \\
+                --format progress \\
+                --format json:/app/report/cucumber-report.json"
+          """
         }
       }
     }
 
-    stage('Run Visual Tests with Applitools') {
-      steps {
-        script {
-          echo "👁️ Running visual tests with Applitools..."
-          echo "🔗 View Applitools Dashboard at: https://eyes.applitools.com"
+   stage('Run Visual Tests with Applitools') {
+     steps {
+       script {
+      echo "👁️ Running visual tests with Applitools..."
+     
+      echo "🔗 View Applitools Dashboard at:"
+      echo "   https://eyes.applitools.com"
         }
-      }
-    }
+  }
+}
 
+
+  
     stage('Start Metrics Exporter') {
       steps {
         script {
@@ -89,6 +84,23 @@ pipeline {
               nohup node /app/test_metrics_exporter.js > /app/exporter.log 2>&1 &
             '
           """
+          def success = false
+          for (int i = 0; i < 10; i++) {
+            def result = sh(
+              script: "docker exec ${CONTAINER_NAME} curl -sf http://localhost:8000/metrics || true",
+              returnStdout: true
+            ).trim()
+            if (result.contains("tests_passed") || result.contains("tests_failed")) {
+              echo "✅ Exporter is up and responding."
+              success = true
+              break
+            }
+            echo "⏳ Waiting for exporter... (${i + 1}/10)"
+            sleep 2
+          }
+          if (!success) {
+            error("❌ Exporter failed to start or did not respond with metrics.")
+          }
         }
       }
     }
@@ -99,31 +111,65 @@ pipeline {
       }
     }
 
-    stage('Send Email Notification') {
+   
+
+    stage('Check Prometheus') {
       steps {
         script {
-          // Download Grafana pie chart PNG
-          sh """
-            curl -s -o piechart.png "${env.GRAFANA_URL}/render/d-solo/bdd-tests/BDD-Test-Dashboard?orgId=1&panelId=${env.GRAFANA_PANEL_ID}&width=800&height=400&tz=UTC"
-          """
-
-          emailext(
-            subject: 'BDD Test Results',
-            body: """
-              <p>✅ Playwright BDD tests completed successfully.</p>
-              <p><b>View Cucumber Public HTML Report:</b> 
-              <a href="${env.CUCUMBER_REPORT_LINK}">${env.CUCUMBER_REPORT_LINK}</a></p>
-              <p><b>Pass vs Fail Chart:</b></p>
-              <img src="cid:piechart.png">
-            """,
-            mimeType: 'text/html',
-            to: 'rymaaissa14@gmail.com',
-            from: 'rymaaissa14@gmail.com',
-            attachmentsPattern: 'piechart.png'
-          )
+          echo "🔎 Checking Prometheus..."
+          sh "curl -s http://prometheus:9090/-/ready || echo '⚠️ Prometheus not reachable'"
         }
       }
     }
+
+    stage('Show Grafana URL') {
+      steps {
+        script {
+          echo "🎨 Grafana is available at: http://localhost:3000"
+          echo "🔗 You can open it in your browser to explore dashboards."
+        }
+      }
+    }
+
+    stage('Check cAdvisor') {
+      steps {
+        script {
+          echo "🔎 Checking cAdvisor..."
+          sh "curl -s http://cadvisor:8080/ || echo '⚠️ cAdvisor not reachable'"
+        }
+      }
+    }
+
+  stage('Send Email Notification') {
+  steps {
+    script {
+      // Download the Grafana pie chart PNG
+      sh """
+        curl -s -o piechart.png "http://grafana:3000/render/d-solo/bdd-tests/BDD-Test-Dashboard?orgId=1&panelId=5&width=800&height=400&tz=UTC"
+      """
+
+      emailext(
+        subject: 'BDD Test Results',
+        body: """
+          ✅ Playwright BDD tests completed.<br><br>
+          📊 <b>View Pass vs Fail Chart in Grafana:</b> 
+          <a href="http://localhost:3000/d/bdd-tests/bdd-test-dashboard?orgId=1&from=2025-08-05T20:38:12.796Z&to=2025-08-06T02:38:12.796Z&timezone=browser&refresh=30s&viewPanel=panel-5">
+            Open Grafana Panel
+          </a>
+          <br><br>
+          <b>Embedded Pie Chart:</b><br>
+          <img src="cid:piechart.png">
+        """,
+        mimeType: 'text/html',
+        to: 'rymaaissa14@gmail.com',
+        from: 'rymaaissa14@gmail.com',
+        attachmentsPattern: 'piechart.png'
+      )
+    }
+  }
+}
+
+    
   }
 
   post {
