@@ -8,7 +8,7 @@ pipeline {
     GIT_REPO = 'git@github.com:ramrym14/Testing.git'
     GIT_BRANCH = 'gh-pages'
     REPORT_DIR = 'report/html'
-    CUCUMBER_REPORT_LINK = '' // will hold extracted link
+    CUCUMBER_REPORT_LINK = ''
   }
 
   stages {
@@ -47,20 +47,17 @@ pipeline {
     stage('Run Playwright/Cucumber Tests') {
       steps {
         script {
-          // Run tests & save output so we can extract report link
+          // Run tests inside container and capture stdout+stderr
           sh """
-            docker exec \\
-              -w /app \\
-              ${CONTAINER_NAME} \\
-              bash -lc "npx cucumber-js features/Countries/**/*.feature \\
-                --format progress \\
-                --publish > cucumber_output.txt"
+            docker exec -w /app ${CONTAINER_NAME} bash -lc "npx cucumber-js features/Countries/**/*.feature \\
+              --format progress \\
+              --publish-all > cucumber_output.txt 2>&1"
           """
 
-          // Copy output file from container to Jenkins workspace
+          // Copy the captured output from container to Jenkins
           sh "docker cp ${CONTAINER_NAME}:/app/cucumber_output.txt ."
 
-          // Extract public Cucumber report link
+          // Extract the public Cucumber report link
           def link = sh(
             script: "grep -o 'https://reports.cucumber.io/reports/[a-zA-Z0-9-]*' cucumber_output.txt | tail -n 1",
             returnStdout: true
