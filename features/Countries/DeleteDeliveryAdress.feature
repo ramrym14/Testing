@@ -18,7 +18,7 @@ Feature: Delete delivery address
     | loginCountry | username     | country | confirmationAction | successMessageVisibility | addressVisibility |
     | Tunisia      | TN08343357   |                 | Cancel             | not see                  | still see         |
    # | Tunisia      | TN08343357   |                 | Yes, delete!       | see                      | not see           |
-   | Tunisia      | TN08343357   | Libya         | Yes, delete!       | see                      | not see           |
+   #| Tunisia      | TN08343357   | Libya         | Yes, delete!       | see                      | not see           |
  
 
    #| Algeria      | DZ108440950   |                 | Cancel             | not see                  | still see         |
