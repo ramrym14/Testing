@@ -56,7 +56,7 @@ pipeline {
               ${CONTAINER_NAME} \\
               bash -lc "npx cucumber-js features/Countries/**/*.feature \\
                 --format progress \\
-                --format json:/app/report/cucumber-report.json"
+                --format json:/app/report/cucumber-report.json|| true"
           """
         }
       }

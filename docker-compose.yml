@@ -34,7 +34,6 @@ services:
     labels:
       - "container_name=playwright"
 
-
   prometheus:
    image: prom/prometheus:latest
    container_name: prometheus
@@ -46,7 +45,6 @@ services:
     - '--config.file=/etc/prometheus/prometheus.yml'
    networks:
     - app-network
-
 
   grafana:
     image: grafana/grafana:latest
@@ -85,12 +83,6 @@ services:
     networks:
       - app-network
     
-
-
-
-
-
-
 networks:
   app-network:
     driver: bridge
