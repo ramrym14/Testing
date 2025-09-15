@@ -10,7 +10,7 @@ module.exports = {
     },
     validData: {
       phone: '94654780',
-      address: 'rue ben mandhour modified',
+      address: 'esprit edition  modified',
     },
     shortPhone: {
       phone: '22',
