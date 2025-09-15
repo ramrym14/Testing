@@ -6,7 +6,7 @@
         "description": "",
         "id": "delete-delivery-address;try-to-delete-delivery-addresses-from-different-cases",
         "keyword": "Scenario Outline",
-        "line": 20,
+        "line": 19,
         "name": "Try to delete delivery addresses from different cases",
         "steps": [
           {
@@ -14,7 +14,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 2245901499
+              "duration": 2696447499
             }
           },
           {
@@ -22,7 +22,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 1018041200
+              "duration": 1240936200
             }
           },
           {
@@ -30,7 +30,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 146477400
+              "duration": 154148299
             }
           },
           {
@@ -38,7 +38,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 133392200
+              "duration": 147490200
             }
           },
           {
@@ -51,7 +51,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 1019310798
+              "duration": 1257315399
             }
           },
           {
@@ -63,8 +63,9 @@
               "location": "steps\\Countries\\authAndNavigationSteps.js:14"
             },
             "result": {
-              "status": "passed",
-              "duration": 13846838598
+              "status": "failed",
+              "duration": 70386678899,
+              "error_message": "page.click: Timeout 7000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('a[href*=\"advisors/edit\"]')\u001b[22m\n\u001b[2m    - locator resolved to <a class=\"grey-text text-darken-1\" href=\"https://international10.arvea-nature-staging.shop/advisors/edit\">…</a>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not visible\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not visible\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    8 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not visible\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 500ms\u001b[22m\n\n    at DeliveryAddButtonPage.goToDeliveryAddressSection (C:\\Users\\YOGA X380\\Desktop\\test1\\pages\\Countries\\AddDeliveryAddressPage.js:51:19)\n    at async World.<anonymous> (C:\\Users\\YOGA X380\\Desktop\\test1\\steps\\Countries\\authAndNavigationSteps.js:16:3)"
             }
           },
           {
@@ -76,8 +77,8 @@
               "location": "steps\\Countries\\deleteDeliverySteps.js:27"
             },
             "result": {
-              "status": "passed",
-              "duration": 1124981498
+              "status": "skipped",
+              "duration": 0
             }
           },
           {
@@ -89,8 +90,8 @@
               "location": "steps\\Countries\\deleteDeliverySteps.js:34"
             },
             "result": {
-              "status": "passed",
-              "duration": 75382299
+              "status": "skipped",
+              "duration": 0
             }
           },
           {
@@ -102,47 +103,47 @@
               "location": "steps\\Countries\\deleteDeliverySteps.js:38"
             },
             "result": {
-              "status": "passed",
-              "duration": 1045305099
+              "status": "skipped",
+              "duration": 0
             }
           },
           {
             "arguments": [],
             "keyword": "And ",
             "line": 10,
-            "name": "I choose to \"Yes, delete!\" the deletion",
+            "name": "I choose to \"Cancel\" the deletion",
             "match": {
               "location": "steps\\Countries\\deleteDeliverySteps.js:43"
             },
             "result": {
-              "status": "passed",
-              "duration": 1018433799
+              "status": "skipped",
+              "duration": 0
             }
           },
           {
             "arguments": [],
             "keyword": "And ",
             "line": 11,
-            "name": "I choose to \"Yes, delete!\" the deletion",
+            "name": "I choose to \"Cancel\" the deletion",
             "match": {
               "location": "steps\\Countries\\deleteDeliverySteps.js:43"
             },
             "result": {
-              "status": "passed",
-              "duration": 1115641398
+              "status": "skipped",
+              "duration": 0
             }
           },
           {
             "arguments": [],
             "keyword": "Then ",
             "line": 12,
-            "name": "I should see the success message",
+            "name": "I should not see the success message",
             "match": {
-              "location": "steps\\Countries\\deleteDeliverySteps.js:49"
+              "location": "steps\\Countries\\deleteDeliverySteps.js:54"
             },
             "result": {
-              "status": "passed",
-              "duration": 1025829698
+              "status": "skipped",
+              "duration": 0
             }
           },
           {
@@ -154,21 +155,21 @@
               "location": "steps\\Countries\\deleteDeliverySteps.js:59"
             },
             "result": {
-              "status": "passed",
-              "duration": 22789499
+              "status": "skipped",
+              "duration": 0
             }
           },
           {
             "arguments": [],
             "keyword": "Then ",
             "line": 14,
-            "name": "I should not see the address in the list",
+            "name": "I should still see the address in the list",
             "match": {
-              "location": "steps\\Countries\\deleteDeliverySteps.js:68"
+              "location": "steps\\Countries\\deleteDeliverySteps.js:63"
             },
             "result": {
-              "status": "passed",
-              "duration": 1022166599
+              "status": "skipped",
+              "duration": 0
             }
           },
           {
@@ -176,7 +177,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 869259099
+              "duration": 3755141199
             }
           },
           {
@@ -184,7 +185,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 2245199
+              "duration": 16418699
             }
           },
           {
@@ -192,7 +193,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 1999599
+              "duration": 196365000
             }
           },
           {
@@ -200,7 +201,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 502379199
+              "duration": 536845400
             }
           }
         ],

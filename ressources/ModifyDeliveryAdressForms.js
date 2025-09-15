@@ -9,8 +9,8 @@ module.exports = {
       registerButton: '[id^="editaddress"] button[type="submit"]',
     },
     validData: {
-      phone: '98654789',
-      address: 'rue ben mandhour212121 modified',
+      phone: '94654780',
+      address: 'rue ben mandhour modified',
     },
     shortPhone: {
       phone: '22',

@@ -1,8 +1,8 @@
 {
-  "type": "DataError",
+  "type": "Timeout",
   "explanation": [
-    "The test failed due to an incorrect login attempt.",
-    "The UI message 'Incorrect credentials, please try again!' corresponds with the login error in the test. Additionally, the error log shows a timeout which suggests that the test was unable to perform the click action on the user icon due to the login failure and the delay (30000ms) expiring.",
-    "Ensure the correct username and password are being provided. It's possible that the credentials need to be updated or reset."
+    "The test failed due to a timeout while waiting for the element 'a[href*=\"advisors/edit\"]' to become visible, enabled and stable before clicking it.",
+    "The UX message does not provide information about the error, but the log suggests that the element was not found when attempting to click it. This could potentially lead to a failed login because the 'Edit Advisor' link was expected to be clicked after the user logs in.",
+    "Ensure that the page is properly loaded before clicking the 'Edit Advisor' link. You may want to add a waitForSelector or waitForFunction step to ensure that the element is visible and clickable before proceeding."
   ]
 }

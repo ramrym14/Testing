@@ -16,8 +16,8 @@ module.exports = {
       governorateIndex: 0,
       cityIndex: 0,
       localityIndex: 0,
-      address: 'tunisia  ',
-      phone: '20123456'
+      address: ' Vive La Vida  ',
+      phone: '50123456'
     },
     shortPhone: {
       governorateIndex: 0,
