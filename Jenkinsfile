@@ -148,7 +148,7 @@ pipeline {
         body: """
           ✅ Playwright BDD tests completed.<br><br>
           📊 <b>View Pass vs Fail Chart in Grafana:</b> 
-          <a href="http://localhost:3000/d/bdd-tests/bdd-test-dashboard?orgId=1&from=2025-08-05T20:38:12.796Z&to=2025-08-06T02:38:12.796Z&timezone=browser&refresh=30s&viewPanel=panel-5">
+          <a href="http://localhost:3000/dashboards">
             Open Grafana Panel
           </a>
         """,
