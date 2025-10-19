@@ -4,17 +4,17 @@
     "elements": [
       {
         "description": "",
-        "id": "delete-delivery-address;try-to-delete-delivery-addresses-from-different-cases",
+        "id": "delivery-address-behavior-based-on-selected-country;verify-add-button-behavior-and-address-form-outcome-by-selected-country",
         "keyword": "Scenario Outline",
-        "line": 19,
-        "name": "Try to delete delivery addresses from different cases",
+        "line": 22,
+        "name": "Verify ADD button behavior and address form outcome by selected country",
         "steps": [
           {
             "keyword": "Before",
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 2696447499
+              "duration": 2028708999
             }
           },
           {
@@ -22,7 +22,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 1240936200
+              "duration": 1154627999
             }
           },
           {
@@ -30,7 +30,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 154148299
+              "duration": 138174199
             }
           },
           {
@@ -38,7 +38,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 147490200
+              "duration": 137211400
             }
           },
           {
@@ -51,7 +51,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 1257315399
+              "duration": 1696873198
             }
           },
           {
@@ -64,69 +64,17 @@
             },
             "result": {
               "status": "failed",
-              "duration": 70386678899,
-              "error_message": "page.click: Timeout 7000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('a[href*=\"advisors/edit\"]')\u001b[22m\n\u001b[2m    - locator resolved to <a class=\"grey-text text-darken-1\" href=\"https://international10.arvea-nature-staging.shop/advisors/edit\">…</a>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not visible\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not visible\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    8 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not visible\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 500ms\u001b[22m\n\n    at DeliveryAddButtonPage.goToDeliveryAddressSection (C:\\Users\\YOGA X380\\Desktop\\test1\\pages\\Countries\\AddDeliveryAddressPage.js:51:19)\n    at async World.<anonymous> (C:\\Users\\YOGA X380\\Desktop\\test1\\steps\\Countries\\authAndNavigationSteps.js:16:3)"
-            }
-          },
-          {
-            "arguments": [],
-            "keyword": "And ",
-            "line": 7,
-            "name": "I switch to country \"\" if needed",
-            "match": {
-              "location": "steps\\Countries\\deleteDeliverySteps.js:27"
-            },
-            "result": {
-              "status": "skipped",
-              "duration": 0
-            }
-          },
-          {
-            "arguments": [],
-            "keyword": "And ",
-            "line": 8,
-            "name": "I store the text of the first address in the list",
-            "match": {
-              "location": "steps\\Countries\\deleteDeliverySteps.js:34"
-            },
-            "result": {
-              "status": "skipped",
-              "duration": 0
+              "duration": 10368971800,
+              "error_message": "page.click: Target page, context or browser has been closed\nCall log:\n\u001b[2m  - waiting for locator('a.profile-button')\u001b[22m\n\n    at DeliveryPage.clickUserIcon (C:\\Users\\YOGA X380\\Desktop\\test1\\pages\\Tunisia\\DeliveryPage.js:39:21)\n    at DeliveryAddButtonPage.goToDeliveryAddressSection (C:\\Users\\YOGA X380\\Desktop\\test1\\pages\\Countries\\AddDeliveryAddressPage.js:45:27)\n    at async World.<anonymous> (C:\\Users\\YOGA X380\\Desktop\\test1\\steps\\Countries\\authAndNavigationSteps.js:16:3)"
             }
           },
           {
             "arguments": [],
             "keyword": "When ",
-            "line": 9,
-            "name": "I click the delete icon of the first address",
+            "line": 7,
+            "name": "I select \"\"",
             "match": {
-              "location": "steps\\Countries\\deleteDeliverySteps.js:38"
-            },
-            "result": {
-              "status": "skipped",
-              "duration": 0
-            }
-          },
-          {
-            "arguments": [],
-            "keyword": "And ",
-            "line": 10,
-            "name": "I choose to \"Cancel\" the deletion",
-            "match": {
-              "location": "steps\\Countries\\deleteDeliverySteps.js:43"
-            },
-            "result": {
-              "status": "skipped",
-              "duration": 0
-            }
-          },
-          {
-            "arguments": [],
-            "keyword": "And ",
-            "line": 11,
-            "name": "I choose to \"Cancel\" the deletion",
-            "match": {
-              "location": "steps\\Countries\\deleteDeliverySteps.js:43"
+              "location": "steps\\Countries\\addAddressSteps.js:31"
             },
             "result": {
               "status": "skipped",
@@ -136,10 +84,62 @@
           {
             "arguments": [],
             "keyword": "Then ",
-            "line": 12,
-            "name": "I should not see the success message",
+            "line": 8,
+            "name": "the \"ADD\" button should be visible",
             "match": {
-              "location": "steps\\Countries\\deleteDeliverySteps.js:54"
+              "location": "steps\\Countries\\addAddressSteps.js:36"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 9,
+            "name": "the \"ADD\" button should be enabled",
+            "match": {
+              "location": "steps\\Countries\\addAddressSteps.js:44"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 10,
+            "name": "I click on the \"ADD\" button",
+            "match": {
+              "location": "steps\\Countries\\addAddressSteps.js:52"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 11,
+            "name": "the Add Address modal should be open",
+            "match": {
+              "location": "steps\\Countries\\addAddressSteps.js:57"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 12,
+            "name": "I fill the Add Address form with \"validData\"",
+            "match": {
+              "location": "steps\\Countries\\addAddressSteps.js:66"
             },
             "result": {
               "status": "skipped",
@@ -150,9 +150,9 @@
             "arguments": [],
             "keyword": "And ",
             "line": 13,
-            "name": "I click OK to close the success message if visible",
+            "name": "I click on \"REGISTER\"",
             "match": {
-              "location": "steps\\Countries\\deleteDeliverySteps.js:59"
+              "location": "steps\\Countries\\addAddressSteps.js:75"
             },
             "result": {
               "status": "skipped",
@@ -163,9 +163,32 @@
             "arguments": [],
             "keyword": "Then ",
             "line": 14,
-            "name": "I should still see the address in the list",
+            "name": "the address should be \"success\"",
             "match": {
-              "location": "steps\\Countries\\deleteDeliverySteps.js:63"
+              "location": "steps\\Countries\\addAddressSteps.js:84"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [
+              {
+                "rows": [
+                  {
+                    "cells": [
+                      "Operation performed successfully"
+                    ]
+                  }
+                ]
+              }
+            ],
+            "keyword": "And ",
+            "line": 15,
+            "name": "I should see the messages:",
+            "match": {
+              "location": "steps\\Countries\\addAddressSteps.js:138"
             },
             "result": {
               "status": "skipped",
@@ -177,7 +200,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 3755141199
+              "duration": 820458599
             }
           },
           {
@@ -185,7 +208,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 16418699
+              "duration": 2531600
             }
           },
           {
@@ -193,7 +216,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 196365000
+              "duration": 2425699
             }
           },
           {
@@ -201,37 +224,37 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 536845400
+              "duration": 507962999
             }
           }
         ],
         "tags": [
           {
-            "name": "@delete",
+            "name": "@add",
             "line": 1
           },
           {
-            "name": "@low",
+            "name": "@high",
             "line": 1
           }
         ],
         "type": "scenario"
       }
     ],
-    "id": "delete-delivery-address",
+    "id": "delivery-address-behavior-based-on-selected-country",
     "line": 2,
     "keyword": "Feature",
-    "name": "Delete delivery address",
+    "name": "Delivery address behavior based on selected country",
     "tags": [
       {
-        "name": "@delete",
+        "name": "@add",
         "line": 1
       },
       {
-        "name": "@low",
+        "name": "@high",
         "line": 1
       }
     ],
-    "uri": "features\\Countries\\DeleteDeliveryAdress.feature"
+    "uri": "features\\Countries\\AddDeliveryAddress.feature"
   }
 ]

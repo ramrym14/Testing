@@ -1,8 +1,8 @@
 {
-  "type": "Timeout",
+  "type": "DataError",
   "explanation": [
-    "The test failed due to a timeout while waiting for the element 'a[href*=\"advisors/edit\"]' to become visible, enabled and stable before clicking it.",
-    "The UX message does not provide information about the error, but the log suggests that the element was not found when attempting to click it. This could potentially lead to a failed login because the 'Edit Advisor' link was expected to be clicked after the user logs in.",
-    "Ensure that the page is properly loaded before clicking the 'Edit Advisor' link. You may want to add a waitForSelector or waitForFunction step to ensure that the element is visible and clickable before proceeding."
+    "The error is related to the incorrect credentials provided during login.",
+    "The UX message 'Incorrect credentials, please try again!' matches the error in the test script where it tries to click the user icon but times out waiting for the locator ('a.profile-button').",
+    "Ensure that the correct username and password are being used. Also, check if the login page DOM is properly loaded before attempting to interact with it."
   ]
 }

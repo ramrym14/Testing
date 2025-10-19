@@ -18,14 +18,14 @@ async function startNewSession() {
   try {
      browser = await chromium.launch({
   channel: 'chrome',
-  headless: true,          // headless in CI
-   });
+//  headless: true,          // headless in CI
+//   });
 
     //browser = await chromium.launch({
      // channel: 'chrome',
-    // headless: false,        // Visible browser for debugging
-     // slowMo: 150,            // Delay for step visibility
-   //  });
+     headless: false,        // Visible browser for debugging
+      slowMo: 150,            // Delay for step visibility
+     });
 
     context = await browser.newContext({
       userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/123.0.0.0 Safari/537.36',
